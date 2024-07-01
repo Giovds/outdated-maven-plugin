@@ -1,0 +1,149 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 132,
+    "params": {
+      "q": "(g:org.apache.maven AND a:maven-core AND v:3.9.8) OR (g:org.apache.maven AND a:maven-plugin-api AND v:3.9.8) OR (g:com.fasterxml.jackson.jr AND a:jackson-jr-objects AND v:2.17.0) OR (g:org.apache.commons AND a:commons-collections4 AND v:4.4) OR (g:org.apache.maven.plugin-tools AND a:maven-plugin-annotations AND v:3.13.1)",
+      "core": "yoyo",
+      "indent": "off",
+      "fl": "id,g,a,v,p,ec,timestamp,tags",
+      "start": "",
+      "sort": "score desc,timestamp desc,g asc,a asc,v desc",
+      "rows": "20",
+      "wt": "json",
+      "version": "2.2"
+    }
+  },
+  "response": {
+    "numFound": 5,
+    "start": 0,
+    "docs": [
+      {
+        "id": "org.apache.maven.plugin-tools:maven-plugin-annotations:3.13.1",
+        "g": "org.apache.maven.plugin-tools",
+        "a": "maven-plugin-annotations",
+        "v": "3.13.1",
+        "p": "jar",
+        "timestamp": 1716884186000,
+        "ec": [
+          "-cyclonedx.json",
+          "-sources.jar",
+          "-cyclonedx.xml",
+          ".pom",
+          "-javadoc.jar",
+          ".jar"
+        ],
+        "tags": [
+          "java",
+          "mojos",
+          "annotations"
+        ]
+      },
+      {
+        "id": "org.apache.maven:maven-plugin-api:3.9.8",
+        "g": "org.apache.maven",
+        "a": "maven-plugin-api",
+        "v": "3.9.8",
+        "p": "jar",
+        "timestamp": 1718267011000,
+        "ec": [
+          "-cyclonedx.json",
+          "-sources.jar",
+          "-cyclonedx.xml",
+          ".pom",
+          "-javadoc.jar",
+          ".jar"
+        ],
+        "tags": [
+          "development",
+          "plugins",
+          "mojos"
+        ]
+      },
+      {
+        "id": "org.apache.maven:maven-core:3.9.8",
+        "g": "org.apache.maven",
+        "a": "maven-core",
+        "v": "3.9.8",
+        "p": "jar",
+        "timestamp": 1718267050000,
+        "ec": [
+          "-cyclonedx.json",
+          "-sources.jar",
+          "-cyclonedx.xml",
+          ".pom",
+          "-javadoc.jar",
+          ".jar"
+        ],
+        "tags": [
+          "core",
+          "maven",
+          "classes"
+        ]
+      },
+      {
+        "id": "com.fasterxml.jackson.jr:jackson-jr-objects:2.17.0",
+        "g": "com.fasterxml.jackson.jr",
+        "a": "jackson-jr-objects",
+        "v": "2.17.0",
+        "p": "bundle",
+        "timestamp": 1710280484611,
+        "ec": [
+          ".module",
+          "-sources.jar",
+          ".pom",
+          "-javadoc.jar",
+          ".jar"
+        ],
+        "tags": [
+          "other",
+          "data",
+          "additional",
+          "binding",
+          "generator",
+          "simple",
+          "content",
+          "dependencies",
+          "that",
+          "core",
+          "streaming",
+          "jackson",
+          "provides",
+          "builds",
+          "builder",
+          "style",
+          "directly"
+        ]
+      },
+      {
+        "id": "org.apache.commons:commons-collections4:4.4",
+        "g": "org.apache.commons",
+        "a": "commons-collections4",
+        "v": "4.4",
+        "p": "jar",
+        "timestamp": 1562350218000,
+        "ec": [
+          "-sources.jar",
+          "-javadoc.jar",
+          "-test-sources.jar",
+          "-tests.jar",
+          ".jar",
+          ".pom"
+        ],
+        "tags": [
+          "that",
+          "extend",
+          "commons",
+          "package",
+          "apache",
+          "contains",
+          "java",
+          "types",
+          "augment",
+          "framework",
+          "collections"
+        ]
+      }
+    ]
+  }
+}
