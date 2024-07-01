@@ -18,7 +18,7 @@
         <assertj-core.version>3.25.3</assertj-core.version>
         <mockito-junit-jupiter.version>5.12.0</mockito-junit-jupiter.version>
         <maven-dependencies.version>3.9.8</maven-dependencies.version>
-        <wiremock-standalone.version>3.7.0</wiremock-standalone.version>
+        <wiremock-standalone.version>3.8.0</wiremock-standalone.version>
 
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
