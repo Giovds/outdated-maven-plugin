@@ -9,6 +9,12 @@
     <packaging>maven-plugin</packaging>
 
     <name>The Outdated Maven Plugin</name>
+    <description>The Outdated Maven Plugin is a tool designed to help developers identify outdated dependencies in their
+        Maven projects. By scanning the dependencies of your project, this plugin determines if they are no longer
+        actively maintained based on a user-defined threshold of inactivity in years. This ensures that your project
+        remains up-to-date with the latest and most secure versions of its dependencies.
+    </description>
+    <url>https://github.com/giovds/outdated-maven-plugin/</url>
 
     <properties>
         <maven-plugin-tools.version>3.13.1</maven-plugin-tools.version>
