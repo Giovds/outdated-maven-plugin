@@ -23,6 +23,13 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Giovanni van der Schelde</name>
+            <url>https://github.com/Giovds</url>
+        </developer>
+    </developers>
+
     <properties>
         <maven-plugin-tools.version>3.13.1</maven-plugin-tools.version>
         <maven.compiler.release>21</maven.compiler.release>
