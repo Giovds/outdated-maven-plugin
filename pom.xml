@@ -16,6 +16,16 @@
     </description>
     <url>https://github.com/giovds/outdated-maven-plugin/</url>
 
+    <scm>
+        <connection>scm:git:git://github.com/Giovds/outdated-maven-plugin.git</connection>
+        <developerConnection>scm:git:ssh://github.com:Giovds/outdated-maven-plugin.git</developerConnection>
+        <url>https://github.com/Giovds/outdated-maven-plugin/tree/main</url>
+    </scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/Giovds/outdated-maven-plugin/issues</url>
+    </issueManagement>
+
     <licenses>
         <license>
             <name>MIT License</name>
