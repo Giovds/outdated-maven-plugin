@@ -32,6 +32,7 @@
         <maven-install-plugin.version>3.1.2</maven-install-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
     </properties>
 
 
@@ -196,6 +197,25 @@
                 <executions>
                     <execution>
                         <id>generate-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <!-- Exclude generating docs for generated class by maven-plugin-plugin:helpmojo -->
+                    <excludePackageNames>*.outdated_maven_plugin</excludePackageNames>
+                    <!-- finalName appends '-javadoc' already which is required for Maven Central-->
+                    <finalName>${artifactId}-${version}</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-javadocs</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
