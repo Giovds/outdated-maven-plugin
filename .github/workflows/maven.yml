@@ -22,6 +22,8 @@ jobs:
         java-version: '21'
         distribution: 'adopt'
         cache: maven
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+        gpg-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
     - name: Cache local Maven repository
       uses: actions/cache@v3
       with:
