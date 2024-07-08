@@ -42,7 +42,7 @@ jobs:
         run: |
           mvn \
             -Ppublish-to-github \
-            --non-interactive \
+            -B \
             deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
