@@ -13,7 +13,7 @@
     <properties>
         <maven-plugin-tools.version>3.13.1</maven-plugin-tools.version>
         <maven.compiler.release>21</maven.compiler.release>
-        <jackson-jr-objects.version>2.17.1</jackson-jr-objects.version>
+        <jackson-jr-objects.version>2.17.2</jackson-jr-objects.version>
         <junit-jupiter.version>5.10.3</junit-jupiter.version>
         <assertj-core.version>3.26.0</assertj-core.version>
         <mockito-junit-jupiter.version>5.12.0</mockito-junit-jupiter.version>
