@@ -216,7 +216,6 @@
                 <configuration>
                     <!-- finalName appends '-sources' already which is required for Maven Central-->
                     <finalName>${artifactId}-${version}</finalName>
-                    <attach>false</attach>
                 </configuration>
                 <executions>
                     <execution>
