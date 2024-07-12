@@ -29,7 +29,7 @@ jobs:
         run: |
           mvn \
             -Ppublish-to-central \
-            --non-interactive \
+            -B \
             deploy
       - name: Set up for publishing to GitHub Packages
         uses: actions/setup-java@v4
