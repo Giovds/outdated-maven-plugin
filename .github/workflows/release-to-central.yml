@@ -6,11 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Install gpg secret key
-        id: install-gpg-key
-        run: |
-          echo -n "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import --batch --passphrase ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
-          gpg --list-secret-keys --keyid-format LONG
       - name: Check out the repository
         uses: actions/checkout@v4
         with:
@@ -22,7 +17,8 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
           cache: maven
-          gpg-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
           server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
@@ -30,6 +26,7 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
         run: |
           mvn \
             -Ppublish-to-central \
