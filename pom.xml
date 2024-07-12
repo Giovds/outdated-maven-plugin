@@ -289,17 +289,6 @@
         </profile>
         <profile>
             <id>publish-to-central</id>
-<!--            <distributionManagement>-->
-<!--                <snapshotRepository>-->
-<!--                    <id>central</id>-->
-<!--                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
-<!--                </snapshotRepository>-->
-<!--                <repository>-->
-<!--                    <id>central</id>-->
-<!--                    <name>Maven Central</name>-->
-<!--                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-<!--                </repository>-->
-<!--            </distributionManagement>-->
             <build>
                 <plugins>
                     <plugin>
