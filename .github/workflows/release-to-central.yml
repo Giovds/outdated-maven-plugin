@@ -21,7 +21,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           server-id: oss.sonatype.org
           server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
+          server-password: MAVEN_CENTRAL_TOKEN
       - name: Publish to Central Repository
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
