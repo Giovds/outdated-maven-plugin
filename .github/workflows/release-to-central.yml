@@ -21,11 +21,11 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           server-id: central
           server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
+          server-password: MAVEN_CENTRAL_TOKEN
       - name: Publish to Central Repository
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
         run: |
           mvn \
