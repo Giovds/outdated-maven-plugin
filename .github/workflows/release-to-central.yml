@@ -6,6 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Install gpg secret key
+        id: install-gpg-key
+        run: |
+          cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
       - name: Check out the repository
         uses: actions/checkout@v4
         with:
@@ -17,7 +22,6 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
           cache: maven
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
           server-id: ossrh
           server-username: MAVEN_USERNAME
