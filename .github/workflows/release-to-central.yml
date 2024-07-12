@@ -9,7 +9,7 @@ jobs:
       - name: Install gpg secret key
         id: install-gpg-key
         run: |
-          echo -n "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import --batch
+          echo -n "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode | gpg --import --batch --passphrase ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
           gpg --list-secret-keys --keyid-format LONG
       - name: Check out the repository
         uses: actions/checkout@v4
