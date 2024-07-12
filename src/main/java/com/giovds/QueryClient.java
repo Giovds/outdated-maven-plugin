@@ -17,6 +17,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Search Maven Central with a Lucene query
+ */
 public class QueryClient {
     private final String main_uri;
 
@@ -27,10 +30,20 @@ public class QueryClient {
         this.main_uri = uri;
     }
 
+    /**
+     * Defaults to connect to actual Maven Central endpoint
+     */
     public QueryClient() {
         this("https://search.maven.org/solrsearch/select");
     }
 
+    /**
+     * Send a GET request to Maven Central with the provided query to
+     *
+     * @param query The Lucene query as {@link String}
+     * @return A set of dependencies returned by Maven Central mapped to {@link FoundDependency}
+     * @throws MojoExecutionException when something failed when sending the request
+     */
     public Set<FoundDependency> search(final String query) throws MojoExecutionException {
         try (final HttpClient client = HttpClient.newHttpClient()) {
             final HttpRequest request = buildHttpRequest(query);
@@ -73,10 +86,19 @@ public class QueryClient {
 
     }
 
+    /**
+     * The dependency returned by the Maven Central response
+     *
+     * @param id        GAV (groupId:artifactId:version)
+     * @param g         groupId
+     * @param a         artifactId
+     * @param v         version
+     * @param timestamp The date this GAV id was released to Maven Central
+     */
     public record FoundDependency(String id, String g, String a, String v, LocalDate timestamp) {
     }
 
-    public static FoundDependency mapToSearch(Map<String, Object> doc) {
+    static FoundDependency mapToSearch(Map<String, Object> doc) {
         return new FoundDependency(
                 (String) doc.get("id"),
                 (String) doc.get("g"),
