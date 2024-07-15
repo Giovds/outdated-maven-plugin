@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
  */
 public class QueryClient {
     private final String main_uri;
+    private static final HttpClient client = HttpClient.newHttpClient();
 
     /**
      * Visible for testing purposes
@@ -47,7 +48,6 @@ public class QueryClient {
      */
     public Set<FoundDependency> search(final String query) throws MojoExecutionException {
         try {
-            final HttpClient client = HttpClient.newHttpClient();
             final HttpRequest request = buildHttpRequest(query);
             return client.send(request, new SearchResponseBodyHandler()).body();
         } catch (Exception e) {
