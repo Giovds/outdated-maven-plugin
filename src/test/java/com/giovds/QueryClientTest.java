@@ -33,12 +33,32 @@ class QueryClientTest {
     }
 
     @Test
-    void should_throw_exception_when_failed_to_connect(final WireMockRuntimeInfo wmRuntimeInfo) throws MojoExecutionException {
+    void should_throw_exception_when_failed_to_connect(final WireMockRuntimeInfo wmRuntimeInfo) {
         stubFor(get(anyUrl())
                 .willReturn(aResponse()
                         .withFault(Fault.CONNECTION_RESET_BY_PEER)));
 
         assertThatThrownBy(() -> new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search("any-query"))
                 .isInstanceOf(MojoExecutionException.class);
+    }
+
+    @Test
+    void should_report_error_when_failed_to_connect(final WireMockRuntimeInfo wmRuntimeInfo) {
+        final String forbiddenBody = """
+                </html>
+                    <head><title>403 Forbidden</title></head>
+                    <body>
+                        <center><h1>403 Forbidden</h1></center>
+                    </body>
+                </html>
+                """;
+        stubFor(get(anyUrl())
+                .willReturn(forbidden()
+                        .withBody(forbiddenBody)));
+
+        assertThatThrownBy(() -> new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search("any-query"))
+                .isInstanceOf(MojoExecutionException.class)
+                .rootCause()
+                .hasMessageContaining(forbiddenBody);
     }
 }
