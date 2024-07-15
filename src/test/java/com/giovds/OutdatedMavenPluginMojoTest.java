@@ -9,13 +9,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class OutdatedMavenPluginMojoTest {
@@ -38,11 +42,21 @@ class OutdatedMavenPluginMojoTest {
     }
 
     @Test
-    void should_now_throw_exception_by_default_when_outdatedDependencies() throws Exception {
+    void should_not_throw_exception_by_default_when_outdatedDependencies() throws Exception {
         final MavenProject projectWithDependency = createProjectWithDependencyOfAge(LocalDate.now().minusYears(10));
         mojo.setProject(projectWithDependency);
 
         assertThatCode(() -> mojo.execute()).doesNotThrowAnyException();
+    }
+
+    @Test
+    void should_not_throw_exception_when_no_dependencies() throws MojoExecutionException {
+        final MavenProject project = new MavenProject();
+        project.setDependencies(Collections.emptyList());
+        mojo.setProject(project);
+
+        assertThatCode(() -> mojo.execute()).doesNotThrowAnyException();
+        verify(client, never()).search(anyString());
     }
 
     private MavenProject createProjectWithDependencyOfAge(final LocalDate timestamp) throws MojoExecutionException {
