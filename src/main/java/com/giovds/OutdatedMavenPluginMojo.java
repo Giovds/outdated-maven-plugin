@@ -52,6 +52,12 @@ public class OutdatedMavenPluginMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         final String queryForAllDependencies = DependenciesToQueryMapper.map(project.getDependencies());
+
+        if (queryForAllDependencies.isBlank()) {
+            // When building a POM without any dependencies there will be nothing to query.
+            return;
+        }
+
         final Set<QueryClient.FoundDependency> result = client.search(queryForAllDependencies);
 
         final Collection<QueryClient.FoundDependency> outdatedDependencies = new ArrayList<>();
