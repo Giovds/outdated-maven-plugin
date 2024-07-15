@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -65,6 +66,11 @@ public class QueryClient {
     private static class SearchResponseBodyHandler implements HttpResponse.BodyHandler<Set<FoundDependency>> {
         @Override
         public HttpResponse.BodySubscriber<Set<FoundDependency>> apply(final HttpResponse.ResponseInfo responseInfo) {
+            if (responseInfo.statusCode() > 201) {
+                return HttpResponse.BodySubscribers.mapping(HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8), s -> {
+                    throw new RuntimeException("Search failed: status: " + responseInfo.statusCode() + " body: " + s);
+                });
+            }
             HttpResponse.BodySubscriber<InputStream> stream = HttpResponse.BodySubscribers.ofInputStream();
             return HttpResponse.BodySubscribers.mapping(stream, this::toSearchResponse);
         }
