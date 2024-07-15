@@ -46,7 +46,8 @@ public class QueryClient {
      * @throws MojoExecutionException when something failed when sending the request
      */
     public Set<FoundDependency> search(final String query) throws MojoExecutionException {
-        try (final HttpClient client = HttpClient.newHttpClient()) {
+        try {
+            final HttpClient client = HttpClient.newHttpClient();
             final HttpRequest request = buildHttpRequest(query);
             return client.send(request, new SearchResponseBodyHandler()).body();
         } catch (Exception e) {
