@@ -1,4 +1,4 @@
-name: Publish artifact to Maven Central
+name: Publish artifact
 
 on: workflow_dispatch
 
@@ -17,7 +17,7 @@ jobs:
       - name: Set for publishing to Maven Central
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '17'
           distribution: 'adopt'
           cache: maven
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -38,7 +38,7 @@ jobs:
       - name: Set up for publishing to GitHub Packages
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '17'
           distribution: 'adopt'
           server-id: github
           cache: maven
