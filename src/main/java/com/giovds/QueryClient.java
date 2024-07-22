@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * Search Maven Central with a Lucene query
  */
 public class QueryClient {
-    private static final int MAX_URL_LENGTH = 2000;
+    static final int MAX_URL_LENGTH = 2000;
     private final String main_uri;
     private static final HttpClient client = HttpClient.newHttpClient();
 
@@ -73,7 +73,6 @@ public class QueryClient {
 
     /**
      * Large projects can have lots of dependencies which results in exceeding the max length of a GET request.
-     *
      * <a href="https://github.com/Giovds/outdated-maven-plugin/issues/24">For more info checkout the issue</a>
      * @return The maximum allowed length of the query parameters for one request.
      */

@@ -34,22 +34,22 @@ public class DependenciesToQueryMapper {
             if (isWithinMaxLength(maxQueryLength, query, nextQueryParam)) {
                 query.append(nextQueryParam).append(JOIN_CHARS);
             } else {
-                // Remove the last JOIN_CHARS
-                if (!query.isEmpty()) {
-                    query.setLength(query.length() - JOIN_CHARS.length());
-                }
+                removeTrailingJoin(query);
                 result.add(query.toString());
                 query = new StringBuilder(nextQueryParam).append(JOIN_CHARS);
             }
 
-            // Add the final query if it's the last dependency
-            if (i == dependencies.size() - 1 && !query.isEmpty()) {
-                query.setLength(query.length() - JOIN_CHARS.length());
+            if (i == dependencies.size() - 1) {
+                removeTrailingJoin(query);
                 result.add(query.toString());
             }
         }
 
         return result;
+    }
+
+    private static void removeTrailingJoin(final StringBuilder query) {
+        query.setLength(query.length() - JOIN_CHARS.length());
     }
 
     private static boolean isWithinMaxLength(final int maxQueryLength, final StringBuilder query, final String nextQueryParam) {

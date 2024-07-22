@@ -4,6 +4,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,6 +30,11 @@ class OutdatedMavenPluginMojoTest {
 
     @InjectMocks
     private OutdatedMavenPluginMojo mojo = new OutdatedMavenPluginMojo(client);
+
+    @BeforeEach
+    void setUp() {
+        when(client.getMaximumRequestLength()).thenReturn(QueryClient.MAX_URL_LENGTH);
+    }
 
     @Test
     void should_throw_exception_when_shouldFailBuild_and_outdatedDependencies() throws Exception {
