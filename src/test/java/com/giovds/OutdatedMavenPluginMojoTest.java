@@ -16,7 +16,7 @@ import java.util.Set;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -56,7 +56,7 @@ class OutdatedMavenPluginMojoTest {
         mojo.setProject(project);
 
         assertThatCode(() -> mojo.execute()).doesNotThrowAnyException();
-        verify(client, never()).search(anyString());
+        verify(client, never()).search(anyList());
     }
 
     private MavenProject createProjectWithDependencyOfAge(final LocalDate timestamp) throws MojoExecutionException {

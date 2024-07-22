@@ -14,6 +14,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
  * Search Maven Central with a Lucene query
  */
 public class QueryClient {
+    private static final int MAX_URL_LENGTH = 2000;
     private final String main_uri;
     private static final HttpClient client = HttpClient.newHttpClient();
 
@@ -42,26 +45,41 @@ public class QueryClient {
     /**
      * Send a GET request to Maven Central with the provided query to
      *
-     * @param query The Lucene query as {@link String}
+     * @param queries The Lucene query as {@link String}
      * @return A set of dependencies returned by Maven Central mapped to {@link FoundDependency}
      * @throws MojoExecutionException when something failed when sending the request
      */
-    public Set<FoundDependency> search(final String query) throws MojoExecutionException {
+    public Set<FoundDependency> search(final List<String> queries) throws MojoExecutionException {
         try {
-            final HttpRequest request = buildHttpRequest(query);
-            return client.send(request, new SearchResponseBodyHandler()).body();
+            final Set<FoundDependency> allDependencies = new HashSet<>();
+            for (final String query : queries) {
+                final HttpRequest request = buildHttpRequest(query);
+                allDependencies.addAll(client.send(request, new SearchResponseBodyHandler()).body());
+            }
+            return allDependencies;
         } catch (Exception e) {
             throw new MojoExecutionException("Failed to connect.", e);
         }
     }
 
-    private HttpRequest buildHttpRequest(String query) {
+    private HttpRequest buildHttpRequest(final String query) {
         final String uri = String.format("%s?q=%s&wt=json", main_uri, query);
         return HttpRequest.newBuilder()
                 .GET()
                 .version(HttpClient.Version.HTTP_2)
                 .uri(URI.create(uri))
                 .build();
+    }
+
+    /**
+     * Large projects can have lots of dependencies which results in exceeding the max length of a GET request.
+     *
+     * <a href="https://github.com/Giovds/outdated-maven-plugin/issues/24">For more info checkout the issue</a>
+     * @return The maximum allowed length of the query parameters for one request.
+     */
+    int getMaximumRequestLength() {
+        final int queryFormatLength = 11; // ?q= and &wt=json
+        return MAX_URL_LENGTH - this.main_uri.length() + queryFormatLength;
     }
 
     private static class SearchResponseBodyHandler implements HttpResponse.BodyHandler<Set<FoundDependency>> {
@@ -105,7 +123,7 @@ public class QueryClient {
     public record FoundDependency(String id, String g, String a, String v, LocalDate timestamp) {
     }
 
-    static FoundDependency mapToSearch(Map<String, Object> doc) {
+    static FoundDependency mapToSearch(final Map<String, Object> doc) {
         return new FoundDependency(
                 (String) doc.get("id"),
                 (String) doc.get("g"),
