@@ -7,6 +7,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -22,7 +23,7 @@ class QueryClientTest {
                 .willReturn(aResponse()
                         .withBodyFile("exampleResponse.json")));
 
-        final Set<QueryClient.FoundDependency> result = new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search("any-query");
+        final Set<QueryClient.FoundDependency> result = new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search(List.of("any-query"));
 
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(5);
@@ -38,7 +39,7 @@ class QueryClientTest {
                 .willReturn(aResponse()
                         .withFault(Fault.CONNECTION_RESET_BY_PEER)));
 
-        assertThatThrownBy(() -> new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search("any-query"))
+        assertThatThrownBy(() -> new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search(List.of("any-query")))
                 .isInstanceOf(MojoExecutionException.class);
     }
 
@@ -56,7 +57,7 @@ class QueryClientTest {
                 .willReturn(forbidden()
                         .withBody(forbiddenBody)));
 
-        assertThatThrownBy(() -> new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search("any-query"))
+        assertThatThrownBy(() -> new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search(List.of("any-query")))
                 .isInstanceOf(MojoExecutionException.class)
                 .rootCause()
                 .hasMessageContaining(forbiddenBody);

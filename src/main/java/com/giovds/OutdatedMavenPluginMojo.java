@@ -13,6 +13,7 @@ import org.apache.maven.project.MavenProject;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -51,9 +52,9 @@ public class OutdatedMavenPluginMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        final String queryForAllDependencies = DependenciesToQueryMapper.map(project.getDependencies());
+        final List<String> queryForAllDependencies = DependenciesToQueryMapper.mapToQueries(client.getMaximumRequestLength(), project.getDependencies());
 
-        if (queryForAllDependencies.isBlank()) {
+        if (queryForAllDependencies.isEmpty()) {
             // When building a POM without any dependencies there will be nothing to query.
             return;
         }
