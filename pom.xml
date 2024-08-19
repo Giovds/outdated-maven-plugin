@@ -53,7 +53,7 @@
         <wiremock-standalone.version>3.9.1</wiremock-standalone.version>
 
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.4.0</maven-surefire-plugin.version>
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
         <maven-install-plugin.version>3.1.2</maven-install-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
