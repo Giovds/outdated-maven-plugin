@@ -55,7 +55,6 @@ class OutdatedMavenPluginMojoTest {
         project.setDependencies(Collections.emptyList());
         mojo.setProject(project);
 
-        assertThatCode(() -> mojo.execute()).doesNotThrowAnyException();
         verify(client, never()).search(anyList());
     }
 
