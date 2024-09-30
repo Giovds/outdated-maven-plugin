@@ -71,16 +71,6 @@ public class QueryClient {
                 .build();
     }
 
-    /**
-     * Large projects can have lots of dependencies which results in exceeding the max length of a GET request.
-     * <a href="https://github.com/Giovds/outdated-maven-plugin/issues/24">For more info checkout the issue</a>
-     * @return The maximum allowed length of the query parameters for one request.
-     */
-    int getMaximumRequestLength() {
-        final int queryFormatLength = 11; // ?q= and &wt=json
-        return MAX_URL_LENGTH - this.main_uri.length() + queryFormatLength;
-    }
-
     private static class SearchResponseBodyHandler implements HttpResponse.BodyHandler<Set<FoundDependency>> {
         @Override
         public HttpResponse.BodySubscriber<Set<FoundDependency>> apply(final HttpResponse.ResponseInfo responseInfo) {

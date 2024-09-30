@@ -3,6 +3,7 @@ package com.giovds;
 import org.apache.maven.model.Dependency;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,6 +11,7 @@ import java.util.List;
  * This in order to not spam the endpoint with a request per dependency.
  */
 public class DependenciesToQueryMapper {
+    private static final int maxItemsPerQuery = 20;
     private static final String JOIN_CHARS = "+OR+";
 
     private DependenciesToQueryMapper() {
@@ -19,31 +21,30 @@ public class DependenciesToQueryMapper {
      * Creates multiple <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> queries from
      * a collection of {@link org.apache.maven.project.MavenProject} {@link Dependency}
      *
-     * @param maxQueryLength The maximum allowed query length before adding a new query to the list
      * @param dependencies   A collection of Maven {@link Dependency} to convert to query params
      * @return A {@link List} of Lucene queries of {@link String} with spaces escaped by '+'
      */
-    public static List<String> mapToQueries(final int maxQueryLength, final List<Dependency> dependencies) {
+    public static List<String> mapToQueries(final Collection<Dependency> dependencies) {
         final List<String> result = new ArrayList<>();
 
+        int itemsInQuery = 0;
         StringBuilder query = new StringBuilder();
-        for (int i = 0; i < dependencies.size(); i++) {
-            final Dependency dependency = dependencies.get(i);
+        for (Dependency dependency : dependencies) {
             final String nextQueryParam = GroupArtifactIdMapper.toQueryString(dependency);
+            query.append(nextQueryParam);
+            itemsInQuery++;
 
-            if (isWithinMaxLength(maxQueryLength, query, nextQueryParam)) {
-                query.append(nextQueryParam).append(JOIN_CHARS);
+            if (itemsInQuery == maxItemsPerQuery) {
+                result.add(query.toString());
+                itemsInQuery = 0;
+                query = new StringBuilder();
             } else {
-                removeTrailingJoin(query);
-                result.add(query.toString());
-                query = new StringBuilder(nextQueryParam).append(JOIN_CHARS);
-            }
-
-            if (i == dependencies.size() - 1) {
-                removeTrailingJoin(query);
-                result.add(query.toString());
+                query.append(JOIN_CHARS);
             }
         }
+
+        removeTrailingJoin(query);
+        result.add(query.toString());
 
         return result;
     }
