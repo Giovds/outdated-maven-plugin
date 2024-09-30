@@ -45,7 +45,7 @@
 
         <maven-plugin-tools.version>3.15.0</maven-plugin-tools.version>
         <maven.compiler.release>17</maven.compiler.release>
-        <jackson-jr-objects.version>2.17.2</jackson-jr-objects.version>
+        <jackson-jr-objects.version>2.18.0</jackson-jr-objects.version>
         <junit-jupiter.version>5.11.1</junit-jupiter.version>
         <assertj-core.version>3.26.3</assertj-core.version>
         <mockito-junit-jupiter.version>5.13.0</mockito-junit-jupiter.version>
