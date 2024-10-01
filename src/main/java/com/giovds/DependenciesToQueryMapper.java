@@ -44,13 +44,17 @@ public class DependenciesToQueryMapper {
         }
 
         removeTrailingJoin(query);
-        result.add(query.toString());
+        if (!query.isEmpty()) {
+            result.add(query.toString());
+        }
 
         return result;
     }
 
     private static void removeTrailingJoin(final StringBuilder query) {
-        query.setLength(query.length() - JOIN_CHARS.length());
+        if (query.length() > JOIN_CHARS.length()) {
+            query.setLength(query.length() - JOIN_CHARS.length());
+        }
     }
 
     private static boolean isWithinMaxLength(final int maxQueryLength, final StringBuilder query, final String nextQueryParam) {
