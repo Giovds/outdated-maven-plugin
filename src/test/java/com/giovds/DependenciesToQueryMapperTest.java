@@ -1,12 +1,19 @@
 package com.giovds;
 
 import org.apache.maven.model.Dependency;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class DependenciesToQueryMapperTest {
 
     @Test
@@ -16,24 +23,24 @@ class DependenciesToQueryMapperTest {
         final var firstDep = createDependency("com.giovds", "foo-artifact", "1.0.0");
         final var secondDep = createDependency("org.apache.maven", "bar-artifact", "1.2.3");
 
-        final List<String> actualQuery = DependenciesToQueryMapper.mapToQueries(2000, List.of(firstDep, secondDep));
+        final List<String> actualQuery = DependenciesToQueryMapper.mapToQueries(List.of(firstDep, secondDep));
 
         assertThat(actualQuery).hasSize(1)
                 .contains(expectedUriQuery);
     }
 
-    @Test
-    void should_return_multiple_lucene_query_based_on_given_dependencies_when_exceeding_limit() {
-        final var firstDep = createDependency("com.giovds", "foo-artifact", "1.0.0");
-        final var firstExpectedQuery = "(g:com.giovds AND a:foo-artifact AND v:1.0.0)";
-        final var secondDep = createDependency("org.apache.maven", "bar-artifact", "1.2.3");
-        final var secondExpectedQuery = "(g:org.apache.maven AND a:bar-artifact AND v:1.2.3)";
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 19, 20, 25, 30, 40, 59, 60})
+    void should_return_multiple_lucene_query_based_on_given_dependencies_when_exceeding_limit(final int numberOfDeps) {
+        final var dependencies = IntStream.rangeClosed(1, numberOfDeps)
+                .mapToObj(i -> String.format("bar-artifact-%d", i))
+                .map(artifactId -> createDependency("org.apache.maven", artifactId, "1.2.3"))
+                .collect(Collectors.toSet());
 
-        final List<String> actualQuery = DependenciesToQueryMapper.mapToQueries(50, List.of(firstDep, secondDep));
+        final var actualQueries = DependenciesToQueryMapper.mapToQueries(dependencies);
 
-        assertThat(actualQuery).hasSize(2)
-                .contains(firstExpectedQuery.replace(' ', '+'),
-                        secondExpectedQuery.replace(' ', '+'));
+        final var expectedQueryCount = (int) Math.ceil((double) numberOfDeps / 20);
+        assertThat(actualQueries).hasSize(expectedQueryCount).allMatch(query -> query.endsWith(")"));
     }
 
     private Dependency createDependency(String groupId, String artifactId, String version) {
