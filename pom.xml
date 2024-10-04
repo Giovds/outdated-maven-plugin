@@ -320,11 +320,14 @@
                                 </release>
                                 <deploy>
                                     <maven>
+                                        <app>
+                                            <applyMavenCentralRules>true</applyMavenCentralRules>
+                                        </app>
                                         <mavenCentral>
                                             <sonatype>
                                                 <active>ALWAYS</active>
                                                 <url>https://central.sonatype.com/api/v1/publisher</url>
-                                                <stagingRepositories>target/staging-deploy</stagingRepositories>
+                                                <stagingRepositories>${project.build.directory}</stagingRepositories>
                                             </sonatype>
                                         </mavenCentral>
                                     </maven>
