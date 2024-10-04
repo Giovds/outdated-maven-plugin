@@ -5,7 +5,7 @@
 
     <groupId>com.giovds</groupId>
     <artifactId>outdated-maven-plugin</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <packaging>maven-plugin</packaging>
 
     <name>The Outdated Maven Plugin</name>
@@ -37,6 +37,9 @@
         <developer>
             <name>Giovanni van der Schelde</name>
             <url>https://github.com/Giovds</url>
+            <roles>
+                <role>author</role>
+            </roles>
         </developer>
     </developers>
 
@@ -62,6 +65,7 @@
         <maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
         <central-publishing-maven-plugin.version>0.6.0</central-publishing-maven-plugin.version>
+        <jreleaser-maven-plugin.version>1.14.0</jreleaser-maven-plugin.version>
     </properties>
 
 
@@ -203,6 +207,21 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>${maven-deploy-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jreleaser</groupId>
+                    <artifactId>jreleaser-maven-plugin</artifactId>
+                    <version>${jreleaser-maven-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -225,10 +244,13 @@
                 <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>generate-sources</id>
+                        <id>attach-sources</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <attach>true</attach>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -242,10 +264,13 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>generate-javadocs</id>
+                        <id>attach-javadocs</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <attach>true</attach>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -254,20 +279,15 @@
 
     <profiles>
         <profile>
-            <id>publish-to-github</id>
-            <distributionManagement>
-                <repository>
-                    <id>github</id>
-                    <name>GitHub Packages</name>
-                    <url>https://maven.pkg.github.com/giovds/outdated-maven-plugin</url>
-                </repository>
-            </distributionManagement>
+            <id>prepare-release</id>
+            <properties>
+                <altDeploymentRepository>local::file:./target/staging-deploy</altDeploymentRepository>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -288,37 +308,37 @@
             </build>
         </profile>
         <profile>
-            <id>publish-to-central</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                                <configuration>
-                                    <!-- Prevent gpg from using pinentry programs -->
-                                    <gpgArguments>
-                                        <arg>--pinentry-mode</arg>
-                                        <arg>loopback</arg>
-                                    </gpgArguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>${central-publishing-maven-plugin.version}</version>
-                        <extensions>true</extensions>
+                        <groupId>org.jreleaser</groupId>
+                        <artifactId>jreleaser-maven-plugin</artifactId>
                         <configuration>
-                            <publishingServerId>central</publishingServerId>
-                            <autoPublish>true</autoPublish>
+                            <jreleaser>
+                                <signing>
+                                    <active>ALWAYS</active>
+                                    <armored>true</armored>
+                                </signing>
+                                <release>
+                                    <github>
+                                        <owner>Giovds</owner>
+                                        <name>${project.artifactId}</name>
+                                        <overwrite>true</overwrite>
+                                    </github>
+                                </release>
+                                <deploy>
+                                    <maven>
+                                        <mavenCentral>
+                                            <sonatype>
+                                                <active>ALWAYS</active>
+                                                <url>https://central.sonatype.com/api/v1/publisher</url>
+                                                <stagingRepositories>target/staging-deploy</stagingRepositories>
+                                            </sonatype>
+                                        </mavenCentral>
+                                    </maven>
+                                </deploy>
+                            </jreleaser>
                         </configuration>
                     </plugin>
                 </plugins>
