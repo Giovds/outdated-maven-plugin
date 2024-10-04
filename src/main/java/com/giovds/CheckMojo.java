@@ -25,19 +25,19 @@ import java.util.Set;
         requiresOnline = true,
         requiresProject = true,
         requiresDependencyResolution = ResolutionScope.TEST)
-public class OutdatedMavenPluginMojo extends AbstractMojo {
+public class CheckMojo extends AbstractMojo {
     private QueryClient client = new QueryClient();
 
     /**
      * Required for initialization by Maven
      */
-    public OutdatedMavenPluginMojo() {
+    public CheckMojo() {
     }
 
     /**
      * Visible for testing purposes
      */
-    OutdatedMavenPluginMojo(final QueryClient client) {
+    CheckMojo(final QueryClient client) {
         this.client = client;
     }
 

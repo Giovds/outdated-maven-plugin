@@ -22,13 +22,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class OutdatedMavenPluginMojoTest {
+class CheckMojoTest {
 
     @Mock
     private QueryClient client = mock(QueryClient.class);
 
     @InjectMocks
-    private OutdatedMavenPluginMojo mojo = new OutdatedMavenPluginMojo(client);
+    private CheckMojo mojo = new CheckMojo(client);
 
     @Test
     void should_throw_exception_when_shouldFailBuild_and_outdatedDependencies() throws Exception {
