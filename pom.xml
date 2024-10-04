@@ -238,44 +238,47 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>generate-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
-                <configuration>
-                    <!-- Exclude generating docs for generated class by maven-plugin-plugin:helpmojo -->
-                    <excludePackageNames>*.outdated_maven_plugin</excludePackageNames>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <profiles>
         <profile>
             <id>prepare-release</id>
+            <properties>
+                <altDeploymentRepository>local::file:./target/staging-deploy</altDeploymentRepository>
+            </properties>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>generate-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <!-- Exclude generating docs for generated class by maven-plugin-plugin:helpmojo -->
+                            <excludePackageNames>*.outdated_maven_plugin</excludePackageNames>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>generate-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -321,14 +324,11 @@
                                 <deploy>
                                     <maven>
                                         <mavenCentral>
-                                            <app>
-                                                <applyMavenCentralRules>true</applyMavenCentralRules>
-                                            </app>
                                             <sonatype>
                                                 <active>ALWAYS</active>
                                                 <url>https://central.sonatype.com/api/v1/publisher</url>
                                                 <stagingRepositories>
-                                                    <stagingRepository>${project.build.directory}</stagingRepository>
+                                                    <stagingRepository>target/staging-deploy</stagingRepository>
                                                 </stagingRepositories>
                                             </sonatype>
                                         </mavenCentral>
