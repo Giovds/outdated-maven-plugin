@@ -327,7 +327,9 @@
                                             <sonatype>
                                                 <active>ALWAYS</active>
                                                 <url>https://central.sonatype.com/api/v1/publisher</url>
-                                                <stagingRepositories>${project.build.directory}</stagingRepositories>
+                                                <stagingRepositories>
+                                                    <stagingRepository>${project.build.directory}</stagingRepository>
+                                                </stagingRepositories>
                                             </sonatype>
                                         </mavenCentral>
                                     </maven>
