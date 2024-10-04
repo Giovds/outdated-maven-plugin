@@ -32,7 +32,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
         run: |
           mvn \
-            -Prelease \
+            -Pprepare-release \
             -B \
             verify
       - name: Release
@@ -44,4 +44,4 @@ jobs:
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           JRELEASER_MAVENCENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
         run: |
-          mvn jreleaser:full-release
+          mvn -Prelease jreleaser:full-release

@@ -273,7 +273,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>prepare-release</id>
             <build>
                 <plugins>
                     <plugin>
@@ -295,6 +295,13 @@
                             </execution>
                         </executions>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
