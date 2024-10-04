@@ -316,9 +316,6 @@
                                         <owner>Giovds</owner>
                                         <name>${project.artifactId}</name>
                                         <overwrite>true</overwrite>
-                                        <releaseNotes>
-                                            <enabled>true</enabled>
-                                        </releaseNotes>
                                     </github>
                                 </release>
                                 <deploy>
