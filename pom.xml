@@ -320,10 +320,10 @@
                                 </release>
                                 <deploy>
                                     <maven>
-                                        <app>
-                                            <applyMavenCentralRules>true</applyMavenCentralRules>
-                                        </app>
                                         <mavenCentral>
+                                            <app>
+                                                <applyMavenCentralRules>true</applyMavenCentralRules>
+                                            </app>
                                             <sonatype>
                                                 <active>ALWAYS</active>
                                                 <url>https://central.sonatype.com/api/v1/publisher</url>
