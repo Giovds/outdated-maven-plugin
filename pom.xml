@@ -244,10 +244,13 @@
                 <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>generate-sources</id>
+                        <id>attach-sources</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <attach>true</attach>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -261,10 +264,13 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>generate-javadocs</id>
+                        <id>attach-javadocs</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <attach>true</attach>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -327,9 +333,7 @@
                                             <sonatype>
                                                 <active>ALWAYS</active>
                                                 <url>https://central.sonatype.com/api/v1/publisher</url>
-                                                <stagingRepositories>
-                                                    <stagingRepository>target/staging-deploy</stagingRepository>
-                                                </stagingRepositories>
+                                                <stagingRepositories>target/staging-deploy</stagingRepositories>
                                             </sonatype>
                                         </mavenCentral>
                                     </maven>
