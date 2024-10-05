@@ -83,7 +83,7 @@ public class QueryClient {
             return HttpResponse.BodySubscribers.mapping(stream, this::toSearchResponse);
         }
 
-        /**
+     /**
          * Jackson-jr supports record deserialization in version <a href="https://github.com/FasterXML/jackson-jr/issues/162">2.18</a>
          * which isn't released yet. Therefore, manual mapping is required.
          */
@@ -92,12 +92,27 @@ public class QueryClient {
                 final Map<String, Object> httpResponse = JSON.std.mapFrom(input);
                 Map<String, Object> response = (Map<String, Object>) httpResponse.get("response");
                 Collection<Map<String, Object>> dependencies = (Collection<Map<String, Object>>) response.get("docs");
-                return dependencies.stream().map(QueryClient::mapToSearch).collect(Collectors.toSet());
+
+                // Used JSON.std.beanFrom to deserialize to FoundDependency
+                return dependencies.stream()
+                        .map(doc -> {
+                            // Deserialize and create FoundDependency
+                            String id = (String) doc.get("id");
+                            String g = (String) doc.get("g");
+                            String a = (String) doc.get("a");
+                            String v = (String) doc.get("v");
+                            Long timestampMillis = (Long) doc.get("timestamp");
+                            LocalDate timestamp = Instant.ofEpochMilli(timestampMillis)
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate();
+
+                            return new FoundDependency(id, g, a, v, timestamp);
+                        })
+                        .collect(Collectors.toSet());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     /**
@@ -110,16 +125,6 @@ public class QueryClient {
      * @param timestamp The date this GAV id was released to Maven Central
      */
     public record FoundDependency(String id, String g, String a, String v, LocalDate timestamp) {
+        // No need to reassign timestamp; it's directly provided in the constructor
     }
-
-    static FoundDependency mapToSearch(final Map<String, Object> doc) {
-        return new FoundDependency(
-                (String) doc.get("id"),
-                (String) doc.get("g"),
-                (String) doc.get("a"),
-                (String) doc.get("v"),
-                Instant.ofEpochMilli((long) doc.get("timestamp")).atZone(ZoneId.systemDefault()).toLocalDate()
-        );
-    }
-
 }
