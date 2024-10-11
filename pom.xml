@@ -47,14 +47,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
 
-        <maven-plugin-tools.version>3.15.0</maven-plugin-tools.version>
         <jackson-jr-objects.version>2.18.0</jackson-jr-objects.version>
         <junit-jupiter.version>5.11.2</junit-jupiter.version>
         <assertj-core.version>3.26.3</assertj-core.version>
         <mockito-junit-jupiter.version>5.14.1</mockito-junit-jupiter.version>
-        <maven-dependencies.version>3.9.9</maven-dependencies.version>
         <wiremock-standalone.version>3.9.1</wiremock-standalone.version>
 
+        <maven-dependencies.version>3.9.9</maven-dependencies.version>
+        <maven-plugin-tools.version>3.15.0</maven-plugin-tools.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.1</maven-surefire-plugin.version>
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
@@ -64,6 +64,7 @@
         <maven-javadoc-plugin.version>3.10.1</maven-javadoc-plugin.version>
         <maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+
         <jreleaser-maven-plugin.version>1.14.0</jreleaser-maven-plugin.version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
     </properties>
