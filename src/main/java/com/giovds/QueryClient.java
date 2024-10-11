@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
  * Search Maven Central with a Lucene query
  */
 public class QueryClient {
-    static final int MAX_URL_LENGTH = 2000;
     private final String main_uri;
     private static final HttpClient client = HttpClient.newHttpClient();
 
