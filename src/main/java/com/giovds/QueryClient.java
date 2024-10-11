@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
  * Search Maven Central with a Lucene query
  */
 public class QueryClient {
-    static final int MAX_URL_LENGTH = 2000;
     private final String main_uri;
     private static final HttpClient client = HttpClient.newHttpClient();
 
@@ -85,7 +84,8 @@ public class QueryClient {
 
         /**
          * Jackson-jr supports record deserialization in version <a href="https://github.com/FasterXML/jackson-jr/issues/162">2.18</a>
-         * which isn't released yet. Therefore, manual mapping is required.
+         * However this contains a bug regarding the order of the constructor params described in <a href="https://github.com/FasterXML/jackson-jr/issues/167">this issue</a>.
+         * Therefore, manual mapping is required.
          */
         Set<FoundDependency> toSearchResponse(final InputStream inputStream) {
             try (final InputStream input = inputStream) {

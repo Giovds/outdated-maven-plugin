@@ -57,10 +57,6 @@ public class DependenciesToQueryMapper {
         }
     }
 
-    private static boolean isWithinMaxLength(final int maxQueryLength, final StringBuilder query, final String nextQueryParam) {
-        return query.length() + nextQueryParam.length() + JOIN_CHARS.length() <= maxQueryLength;
-    }
-
     private static class GroupArtifactIdMapper {
         private static String toQueryString(final String groupId, final String artifactId, final String version) {
             return String.format("(g:%s+AND+a:%s+AND+v:%s)", groupId, artifactId, version);
