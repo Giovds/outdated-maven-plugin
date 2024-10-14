@@ -1,6 +1,7 @@
 package com.giovds;
 
 import com.fasterxml.jackson.jr.ob.JSON;
+import com.giovds.dto.DependencyResponse;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.IOException;
@@ -10,9 +11,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -45,12 +43,12 @@ public class QueryClient {
      * Send a GET request to Maven Central with the provided query to
      *
      * @param queries The Lucene query as {@link String}
-     * @return A set of dependencies returned by Maven Central mapped to {@link FoundDependency}
+     * @return A set of dependencies returned by Maven Central mapped to {@link DependencyResponse}
      * @throws MojoExecutionException when something failed when sending the request
      */
-    public Set<FoundDependency> search(final List<String> queries) throws MojoExecutionException {
+    public Set<DependencyResponse> search(final List<String> queries) throws MojoExecutionException {
         try {
-            final Set<FoundDependency> allDependencies = new HashSet<>();
+            final Set<DependencyResponse> allDependencies = new HashSet<>();
             for (final String query : queries) {
                 final HttpRequest request = buildHttpRequest(query);
                 allDependencies.addAll(client.send(request, new SearchResponseBodyHandler()).body());
@@ -70,9 +68,9 @@ public class QueryClient {
                 .build();
     }
 
-    private static class SearchResponseBodyHandler implements HttpResponse.BodyHandler<Set<FoundDependency>> {
+    private static class SearchResponseBodyHandler implements HttpResponse.BodyHandler<Set<DependencyResponse>> {
         @Override
-        public HttpResponse.BodySubscriber<Set<FoundDependency>> apply(final HttpResponse.ResponseInfo responseInfo) {
+        public HttpResponse.BodySubscriber<Set<DependencyResponse>> apply(final HttpResponse.ResponseInfo responseInfo) {
             if (responseInfo.statusCode() > 201) {
                 return HttpResponse.BodySubscribers.mapping(HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8), s -> {
                     throw new RuntimeException("Search failed: status: " + responseInfo.statusCode() + " body: " + s);
@@ -87,39 +85,17 @@ public class QueryClient {
          * However this contains a bug regarding the order of the constructor params described in <a href="https://github.com/FasterXML/jackson-jr/issues/167">this issue</a>.
          * Therefore, manual mapping is required.
          */
-        Set<FoundDependency> toSearchResponse(final InputStream inputStream) {
+        Set<DependencyResponse> toSearchResponse(final InputStream inputStream) {
             try (final InputStream input = inputStream) {
                 final Map<String, Object> httpResponse = JSON.std.mapFrom(input);
                 Map<String, Object> response = (Map<String, Object>) httpResponse.get("response");
                 Collection<Map<String, Object>> dependencies = (Collection<Map<String, Object>>) response.get("docs");
-                return dependencies.stream().map(QueryClient::mapToSearch).collect(Collectors.toSet());
+                return dependencies.stream().map(DependencyResponse::mapResponseToDependency).collect(Collectors.toSet());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
-    }
-
-    /**
-     * The dependency returned by the Maven Central response
-     *
-     * @param id        GAV (groupId:artifactId:version)
-     * @param g         groupId
-     * @param a         artifactId
-     * @param v         version
-     * @param timestamp The date this GAV id was released to Maven Central
-     */
-    public record FoundDependency(String id, String g, String a, String v, LocalDate timestamp) {
-    }
-
-    static FoundDependency mapToSearch(final Map<String, Object> doc) {
-        return new FoundDependency(
-                (String) doc.get("id"),
-                (String) doc.get("g"),
-                (String) doc.get("a"),
-                (String) doc.get("v"),
-                Instant.ofEpochMilli((long) doc.get("timestamp")).atZone(ZoneId.systemDefault()).toLocalDate()
-        );
     }
 
 }

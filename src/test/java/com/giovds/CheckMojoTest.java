@@ -1,5 +1,6 @@
 package com.giovds;
 
+import com.giovds.dto.DependencyResponse;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -64,7 +65,7 @@ class CheckMojoTest {
         dependency.setArtifactId("test-example");
         dependency.setVersion("1.0.0");
         when(client.search(any())).thenReturn(Set.of(
-                new QueryClient.FoundDependency("id", dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), timestamp)
+                new DependencyResponse("id", dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), timestamp.toEpochDay())
         ));
 
         final MavenProject project = new MavenProject();
