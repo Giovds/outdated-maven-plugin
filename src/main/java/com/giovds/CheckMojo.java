@@ -85,7 +85,7 @@ public class CheckMojo extends AbstractMojo {
     private void logWarning(final DependencyResponse dep) {
         final String message =
                 String.format("Dependency '%s' has not received an update since version '%s' was last uploaded '%s'.",
-                        dep.id(), dep.v(), dep.timestamp());
+                        dep.id(), dep.v(), dep.getDateTime());
         if (shouldFailBuild) {
             getLog().error(message);
         } else {
