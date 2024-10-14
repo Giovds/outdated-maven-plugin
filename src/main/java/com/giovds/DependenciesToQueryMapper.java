@@ -21,7 +21,7 @@ public class DependenciesToQueryMapper {
      * Creates multiple <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> queries from
      * a collection of {@link org.apache.maven.project.MavenProject} {@link Dependency}
      *
-     * @param dependencies   A collection of Maven {@link Dependency} to convert to query params
+     * @param dependencies A collection of Maven {@link Dependency} to convert to query params
      * @return A {@link List} of Lucene queries of {@link String} with spaces escaped by '+'
      */
     public static List<String> mapToQueries(final Collection<Dependency> dependencies) {

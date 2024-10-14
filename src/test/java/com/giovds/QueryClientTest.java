@@ -1,16 +1,20 @@
 package com.giovds;
 
+import com.giovds.dto.DependencyResponse;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.anyUrl;
+import static com.github.tomakehurst.wiremock.client.WireMock.forbidden;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -23,13 +27,13 @@ class QueryClientTest {
                 .willReturn(aResponse()
                         .withBodyFile("exampleResponse.json")));
 
-        final Set<QueryClient.FoundDependency> result = new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search(List.of("any-query"));
+        final Set<DependencyResponse> result = new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search(List.of("any-query"));
 
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(5);
         assertThat(result).contains(
-                new QueryClient.FoundDependency("org.apache.maven:maven-core:3.9.8", "org.apache.maven", "maven-core", "3.9.8", LocalDate.parse("2024-06-13")),
-                new QueryClient.FoundDependency("org.apache.maven.plugin-tools:maven-plugin-annotations:3.13.1", "org.apache.maven.plugin-tools", "maven-plugin-annotations", "3.13.1", LocalDate.parse("2024-05-28"))
+                new DependencyResponse("org.apache.maven:maven-core:3.9.8", "org.apache.maven", "maven-core", "3.9.8", 1718267050000L),
+                new DependencyResponse("org.apache.maven.plugin-tools:maven-plugin-annotations:3.13.1", "org.apache.maven.plugin-tools", "maven-plugin-annotations", "3.13.1", 1716884186000L)
         );
     }
 

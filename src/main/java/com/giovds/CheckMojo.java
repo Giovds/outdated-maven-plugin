@@ -1,5 +1,6 @@
 package com.giovds;
 
+import com.giovds.dto.DependencyResponse;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -61,13 +62,13 @@ public class CheckMojo extends AbstractMojo {
 
         final List<String> queryForAllDependencies = DependenciesToQueryMapper.mapToQueries(dependencies);
 
-        final Set<QueryClient.FoundDependency> result = client.search(queryForAllDependencies);
+        final Set<DependencyResponse> result = client.search(queryForAllDependencies);
 
-        final Collection<QueryClient.FoundDependency> outdatedDependencies = new ArrayList<>();
+        final Collection<DependencyResponse> outdatedDependencies = new ArrayList<>();
         for (final Dependency currentDependency : project.getDependencies()) {
             result.stream()
                     .filter(dep -> currentDependency.getGroupId().equals(dep.g()) && currentDependency.getArtifactId().equals(dep.a()))
-                    .filter(dep -> dep.timestamp().isBefore(LocalDate.now().minusYears(years)))
+                    .filter(dep -> dep.getDateTime().isBefore(LocalDate.now().minusYears(years)))
                     .findAny()
                     .ifPresent(outdatedDependencies::add);
         }
@@ -81,10 +82,10 @@ public class CheckMojo extends AbstractMojo {
         }
     }
 
-    private void logWarning(final QueryClient.FoundDependency dep) {
+    private void logWarning(final DependencyResponse dep) {
         final String message =
                 String.format("Dependency '%s' has not received an update since version '%s' was last uploaded '%s'.",
-                        dep.id(), dep.v(), dep.timestamp());
+                        dep.id(), dep.v(), dep.getDateTime());
         if (shouldFailBuild) {
             getLog().error(message);
         } else {
