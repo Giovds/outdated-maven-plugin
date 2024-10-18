@@ -77,8 +77,7 @@ public class AverageAgeMojo extends AbstractMojo {
                 })
                 .summaryStatistics();
 
-        var numberOfDependencies = dependenciesToConsider.size();
-        info("Found %d dependencies", numberOfDependencies);
+        info("Found %d dependencies", stats.getCount());
         info("Total age: %d days", stats.getSum());
         info("Average age: %d days", (int) stats.getAverage());
     }
