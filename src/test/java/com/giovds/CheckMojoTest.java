@@ -11,21 +11,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
+import static com.giovds.TestFakes.createDependency;
+import static com.giovds.TestFakes.createProjectWithDependency;
+import static com.giovds.TestFakes.mockClientResponseForDependency;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class CheckMojoTest {
 
@@ -37,8 +36,13 @@ class CheckMojoTest {
 
     @Test
     void should_throw_exception_when_shouldFailBuild_and_outdatedDependencies() throws Exception {
-        final MavenProject projectWithDependency = createProjectWithDependencyOfAge(LocalDate.now().minusYears(10));
-        mojo.setProject(projectWithDependency);
+        var dependency = createDependency();
+        var project = createProjectWithDependency(dependency);
+        mojo.setProject(project);
+
+        mockClientResponseForDependency(client, dependency, LocalDate.now().minusYears(10));
+
+        mojo.setProject(project);
 
         mojo.setShouldFailBuild(true);
         assertThatThrownBy(() -> mojo.execute())
@@ -48,8 +52,13 @@ class CheckMojoTest {
 
     @Test
     void should_not_throw_exception_by_default_when_outdatedDependencies() throws Exception {
-        final MavenProject projectWithDependency = createProjectWithDependencyOfAge(LocalDate.now().minusYears(10));
-        mojo.setProject(projectWithDependency);
+        var dependency = createDependency();
+        var project = createProjectWithDependency(dependency);
+        mojo.setProject(project);
+
+        mockClientResponseForDependency(client, dependency, LocalDate.now().minusYears(10));
+
+        mojo.setProject(project);
 
         assertThatCode(() -> mojo.execute()).doesNotThrowAnyException();
     }
@@ -65,8 +74,12 @@ class CheckMojoTest {
 
     @Test
     void should_log_warning_when_dependency_is_outdated() throws MojoExecutionException {
-        final MavenProject projectWithDependency = createProjectWithDependencyOfAge(LocalDate.of(1998, 2, 19));
-        mojo.setProject(projectWithDependency);
+        var dependency = createDependency();
+        var project = createProjectWithDependency(dependency);
+        mojo.setProject(project);
+
+        mockClientResponseForDependency(client, dependency, LocalDate.of(1998, 2, 19));
+
         TestLogger logger = new TestLogger();
         mojo.setLog(logger);
 
@@ -79,8 +92,12 @@ class CheckMojoTest {
 
     @Test
     void should_log_error_when_dependency_is_outdated_and_shouldFailBuild() throws MojoExecutionException {
-        final MavenProject projectWithDependency = createProjectWithDependencyOfAge(LocalDate.of(1998, 2, 19));
-        mojo.setProject(projectWithDependency);
+        var dependency = createDependency();
+        var project = createProjectWithDependency(dependency);
+        mojo.setProject(project);
+
+        mockClientResponseForDependency(client, dependency, LocalDate.of(1998, 2, 19));
+
         TestLogger logger = new TestLogger();
         mojo.setLog(logger);
         mojo.setShouldFailBuild(true);
@@ -115,24 +132,5 @@ class CheckMojoTest {
         public List<String> getErrorLogs() {
             return errorLogs;
         }
-    }
-
-    private MavenProject createProjectWithDependencyOfAge(final LocalDate date) throws MojoExecutionException {
-        final Dependency dependency = new Dependency();
-        long epochMilliseconds = date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000;
-        dependency.setGroupId("com.giovds");
-        dependency.setArtifactId("test-example");
-        dependency.setVersion("1.0.0");
-        when(client.search(any())).thenReturn(Set.of(
-                new DependencyResponse(createDependencyKey(dependency), dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), epochMilliseconds)
-        ));
-
-        final MavenProject project = new MavenProject();
-        project.setDependencies(List.of(dependency));
-        return project;
-    }
-
-    private static String createDependencyKey(final Dependency dependency) {
-        return String.format("%s:%s:%s", dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion());
     }
 }
