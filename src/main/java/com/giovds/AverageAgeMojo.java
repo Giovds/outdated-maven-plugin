@@ -5,7 +5,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -31,6 +30,10 @@ public class AverageAgeMojo extends AbstractMojo {
     private MavenProject project;
 
     private final LocalDate today = LocalDate.now();
+
+    // Necessary for Maven
+    public AverageAgeMojo() {
+    }
 
     @Override
     public void execute() throws MojoExecutionException {
@@ -100,6 +103,10 @@ public class AverageAgeMojo extends AbstractMojo {
         return !project.getGroupId().equals(artifact.getGroupId());
     }
 
+    //
+    // Utilities for logging
+    //
+
     private void debug(String message, Object... args) {
         if (getLog().isDebugEnabled()) {
             getLog().debug(String.format(message, args));
@@ -111,6 +118,10 @@ public class AverageAgeMojo extends AbstractMojo {
             getLog().info(String.format(message, args));
         }
     }
+
+    //
+    // Only for testing
+    //
 
     AverageAgeMojo(final QueryClient client) {
         this.client = client;
