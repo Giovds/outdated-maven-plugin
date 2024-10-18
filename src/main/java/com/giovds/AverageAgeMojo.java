@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This plugin goal prints the total and average age of all project dependencies. It excludes dependencies with the
+ * same <pre>groupId</pre> (assuming they are part of the same project, they would skew the outcome).
+ */
 @Mojo(name = "average",
         defaultPhase = LifecyclePhase.VERIFY,
         requiresOnline = true,
@@ -31,7 +35,9 @@ public class AverageAgeMojo extends AbstractMojo {
 
     private final LocalDate today = LocalDate.now();
 
-    // Necessary for Maven
+    /**
+     * Necessary for Maven as there already is an all-arguments constructor for testing purposes.
+     */
     public AverageAgeMojo() {
     }
 
