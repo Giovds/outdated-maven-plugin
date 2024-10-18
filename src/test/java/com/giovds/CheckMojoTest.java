@@ -7,8 +7,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -29,11 +27,8 @@ import static org.mockito.Mockito.when;
 
 class CheckMojoTest {
 
-    @Mock
-    private QueryClient client = mock(QueryClient.class);
-
-    @InjectMocks
-    private CheckMojo mojo = new CheckMojo(client);
+    private final QueryClient client = mock(QueryClient.class);
+    private final CheckMojo mojo = new CheckMojo(client);
 
     @Test
     void should_throw_exception_when_shouldFailBuild_and_outdatedDependencies() throws Exception {
@@ -41,7 +36,7 @@ class CheckMojoTest {
         mojo.setProject(projectWithDependency);
 
         mojo.setShouldFailBuild(true);
-        assertThatThrownBy(() -> mojo.execute())
+        assertThatThrownBy(mojo::execute)
                 .isInstanceOf(MojoFailureException.class)
                 .hasMessage("There are dependencies that are outdated.");
     }
@@ -51,7 +46,7 @@ class CheckMojoTest {
         final MavenProject projectWithDependency = createProjectWithDependencyOfAge(LocalDate.now().minusYears(10));
         mojo.setProject(projectWithDependency);
 
-        assertThatCode(() -> mojo.execute()).doesNotThrowAnyException();
+        assertThatCode(mojo::execute).doesNotThrowAnyException();
     }
 
     @Test
@@ -70,7 +65,7 @@ class CheckMojoTest {
         TestLogger logger = new TestLogger();
         mojo.setLog(logger);
 
-        assertThatCode(() -> mojo.execute()).doesNotThrowAnyException();
+        assertThatCode(mojo::execute).doesNotThrowAnyException();
         assertThat(logger.getWarningLogs()).containsExactly(
                 "Dependency 'com.giovds:test-example:1.0.0' has not received an update since version '1.0.0' was last uploaded '1998-02-19'."
         ).hasSize(1);
@@ -85,7 +80,7 @@ class CheckMojoTest {
         mojo.setLog(logger);
         mojo.setShouldFailBuild(true);
 
-        assertThatThrownBy(() -> mojo.execute())
+        assertThatThrownBy(mojo::execute)
                 .isInstanceOf(MojoFailureException.class)
                 .hasMessage("There are dependencies that are outdated.");
         assertThat(logger.getWarningLogs()).isEmpty();
