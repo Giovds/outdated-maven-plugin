@@ -1,6 +1,5 @@
 package com.giovds;
 
-import org.apache.maven.model.Dependency;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.giovds.TestFakes.createDependency;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -41,13 +41,5 @@ class DependenciesToQueryMapperTest {
 
         final var expectedQueryCount = (int) Math.ceil((double) numberOfDeps / 20);
         assertThat(actualQueries).hasSize(expectedQueryCount).allMatch(query -> query.endsWith(")"));
-    }
-
-    private Dependency createDependency(String groupId, String artifactId, String version) {
-        final var dependency = new Dependency();
-        dependency.setGroupId(groupId);
-        dependency.setArtifactId(artifactId);
-        dependency.setVersion(version);
-        return dependency;
     }
 }
