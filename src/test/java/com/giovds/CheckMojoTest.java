@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 import static com.giovds.TestFakes.createDependency;
-import static com.giovds.TestFakes.createProjectWithDependency;
+import static com.giovds.TestFakes.createProjectWithDependencies;
 import static com.giovds.TestFakes.mockClientResponseForDependency;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
@@ -32,7 +32,7 @@ class CheckMojoTest {
     @Test
     void should_throw_exception_when_shouldFailBuild_and_outdatedDependencies() throws Exception {
         var dependency = createDependency();
-        var project = createProjectWithDependency(dependency);
+        var project = createProjectWithDependencies(dependency);
         mojo.setProject(project);
 
         mockClientResponseForDependency(client, dependency, LocalDate.now().minusYears(10));
@@ -48,7 +48,7 @@ class CheckMojoTest {
     @Test
     void should_not_throw_exception_by_default_when_outdatedDependencies() throws Exception {
         var dependency = createDependency();
-        var project = createProjectWithDependency(dependency);
+        var project = createProjectWithDependencies(dependency);
         mojo.setProject(project);
 
         mockClientResponseForDependency(client, dependency, LocalDate.now().minusYears(10));
@@ -70,7 +70,7 @@ class CheckMojoTest {
     @Test
     void should_log_warning_when_dependency_is_outdated() throws MojoExecutionException {
         var dependency = createDependency();
-        var project = createProjectWithDependency(dependency);
+        var project = createProjectWithDependencies(dependency);
         mojo.setProject(project);
 
         mockClientResponseForDependency(client, dependency, LocalDate.of(1998, 2, 19));
@@ -88,7 +88,7 @@ class CheckMojoTest {
     @Test
     void should_log_error_when_dependency_is_outdated_and_shouldFailBuild() throws MojoExecutionException {
         var dependency = createDependency();
-        var project = createProjectWithDependency(dependency);
+        var project = createProjectWithDependencies(dependency);
         mojo.setProject(project);
 
         mockClientResponseForDependency(client, dependency, LocalDate.of(1998, 2, 19));
