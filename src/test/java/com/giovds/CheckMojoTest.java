@@ -1,19 +1,14 @@
 package com.giovds;
 
-import com.giovds.dto.DependencyResponse;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.apache.maven.project.MavenProject;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static com.giovds.TestFakes.createDependency;
 import static com.giovds.TestFakes.createProjectWithDependency;
@@ -109,28 +104,5 @@ class CheckMojoTest {
         assertThat(logger.getErrorLogs()).containsExactly(
                 "Dependency 'com.giovds:test-example:1.0.0' has not received an update since version '1.0.0' was last uploaded '1998-02-19'."
         ).hasSize(1);
-    }
-
-    private static class TestLogger extends SystemStreamLog {
-        private final List<String> warningLogs = new ArrayList<>();
-        private final List<String> errorLogs = new ArrayList<>();
-
-        @Override
-        public void warn(final CharSequence content) {
-            warningLogs.add(content.toString());
-        }
-
-        @Override
-        public void error(final CharSequence content) {
-            errorLogs.add(content.toString());
-        }
-
-        public List<String> getWarningLogs() {
-            return warningLogs;
-        }
-
-        public List<String> getErrorLogs() {
-            return errorLogs;
-        }
     }
 }
