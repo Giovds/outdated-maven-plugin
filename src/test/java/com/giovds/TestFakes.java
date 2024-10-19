@@ -27,13 +27,14 @@ class TestFakes {
         dependency.setGroupId(groupId);
         dependency.setArtifactId(artifactId);
         dependency.setVersion(version);
+        dependency.setScope("compile");
 
         return dependency;
     }
 
-    public static MavenProject createProjectWithDependencies(String packaging, String groupId, String artifactId, String version, Dependency... dependencies) {
+    public static MavenProject createProjectWithDependencies(String groupId, String artifactId, String version, Dependency... dependencies) {
         final MavenProject project = new MavenProject();
-        project.setPackaging(packaging);
+        project.setPackaging("jar");
         project.setGroupId(groupId);
         project.setArtifactId(artifactId);
         project.setVersion(version);
@@ -49,16 +50,16 @@ class TestFakes {
                         dependency.getGroupId(),
                         dependency.getArtifactId(),
                         dependency.getVersion(),
-                        "compile",
-                        "jar",
-                        null,
-                        new DefaultArtifactHandler()
+                        dependency.getScope(),
+                        dependency.getType(),
+                        dependency.getClassifier(),
+                        new DefaultArtifactHandler(dependency.getType())
                 ))
                 .collect(Collectors.toSet());
     }
 
     public static MavenProject createProjectWithDependencies(Dependency... dependencies) {
-        return createProjectWithDependencies("jar", "com.giovds", "test-project", "1.0.0", dependencies);
+        return createProjectWithDependencies("com.giovds", "test-project", "1.0.0", dependencies);
     }
 
     public static void mockClientResponseForDependency(QueryClient client, Dependency dependency, LocalDate date) throws MojoExecutionException {

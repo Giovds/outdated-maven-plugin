@@ -43,16 +43,11 @@ public class AverageAgeMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
-        var isAggregatorProject = "pom".equals(project.getPackaging());
-        if (isAggregatorProject) {
-            getLog().info("Detected aggregator project");
-        }
-
         final Set<Dependency> dependenciesToConsider = project.getArtifacts().stream()
-                .peek(artifact -> debug("Found artifact %s", artifact.getId()))
+                .peek(artifact -> info("Found artifact %s", artifact.getId()))
                 .filter(this::isCompileTimeDependency)
-                .peek(artifact -> debug("Found compile-time artifact %s", artifact.getId()))
-                .filter(artifact -> !isAggregatorProject || isDependencyOutsideProject(artifact))
+                .peek(artifact -> info("Found compile-time artifact %s", artifact.getId()))
+                .filter(this::isDependencyOutsideProject)
                 .peek(artifact -> info("Found compile-time artifact outside this project %s", artifact.getId()))
                 .map(this::convertToDependency)
                 .collect(Collectors.toSet());
@@ -91,7 +86,6 @@ public class AverageAgeMojo extends AbstractMojo {
         result.setType(artifact.getType());
         return result;
     }
-
 
     private long calculateDependencyAge(DependencyResponse dependency) {
         var between = Period.between(dependency.getDateTime(), today);

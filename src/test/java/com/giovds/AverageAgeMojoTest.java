@@ -39,7 +39,7 @@ class AverageAgeMojoTest {
         // Arrange
         var dependency1 = createDependency("com.external", "external-library", "1.0.0");
         var dependency2 = createDependency("com.giovds", "test-library", "1.0.0");
-        var project = createProjectWithDependencies("pom", "com.giovds", "test-app", "1.0.0", dependency1, dependency2);
+        var project = createProjectWithDependencies("com.giovds", "test-app", "1.0.0", dependency1, dependency2);
         mockClientResponseForDependency(client, dependency1, LocalDate.now().minusYears(1));
 
         var logger = new TestLogger();
@@ -52,6 +52,31 @@ class AverageAgeMojoTest {
         // Assert
         assertThat(logger.getInfoLogs()).contains(
                 "Dependency com.external:external-library:1.0.0 is 365 days old",
+                "Total age: 365 days",
+                "Average age: 365 days"
+        );
+    }
+
+    @Test
+    void should_not_consider_dependencies_with_test_scope() throws MojoExecutionException {
+        // Arrange
+        var dependency1 = createDependency("com.external", "external-library-1", "1.0.0");
+        var dependency2 = createDependency("com.external", "external-library-2", "1.0.0");
+        dependency2.setScope("test");
+        var project = createProjectWithDependencies("com.giovds", "external-app", "1.0.0", dependency1, dependency2);
+        mockClientResponseForDependency(client, dependency1, LocalDate.now().minusYears(1));
+
+        var logger = new TestLogger();
+
+        // Act
+        mojo.setLog(logger);
+        mojo.setProject(project);
+        mojo.execute();
+
+        // Assert
+        assertThat(logger.getInfoLogs()).noneMatch(line -> line.contains("external-library-2:1.0.0 is "));
+        assertThat(logger.getInfoLogs()).contains(
+                "Dependency com.external:external-library-1:1.0.0 is 365 days old",
                 "Total age: 365 days",
                 "Average age: 365 days"
         );
