@@ -13,8 +13,10 @@ You can use the plugin as standalone for a quick check by simply running the fol
 project:\
 `mvn com.giovds:outdated-maven-plugin:check -Dyears=<number_of_years>`
 
-Or plug it into your build:
+Or you can use the plugin to get the average and total age of all the dependencies in your project:\
+`mvn com.giovds:outdated-maven-plugin:average`
 
+Alternatively, you can integrate the plugin into your Maven project by adding the following configuration to your `pom.xml` file:
 ```xml
 
 <build>
