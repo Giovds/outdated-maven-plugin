@@ -1,6 +1,8 @@
 package com.giovds;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -11,6 +13,7 @@ import static com.giovds.TestFakes.mockClientResponseForDependency;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AverageAgeMojoTest {
     private final QueryClient client = mock(QueryClient.class);
     private final AverageAgeMojo mojo = new AverageAgeMojo(client);
