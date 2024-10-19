@@ -22,7 +22,7 @@ Or plug it into your build:
         <plugin>
             <groupId>com.giovds</groupId>
             <artifactId>outdated-maven-plugin</artifactId>
-            <version>1.2.0</version>
+            <version>1.3.0</version>
             <configuration>
                 <!-- The maximum amount of inactive years allowed -->
                 <years>1</years>
