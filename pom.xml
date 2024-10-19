@@ -174,13 +174,12 @@
             <version>${wiremock-standalone.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Required by test cases where no logger can be found on classpath -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
-            <scope>test</scope>
         </dependency>
+        <!-- Required by test cases where no logger can be found on classpath -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
