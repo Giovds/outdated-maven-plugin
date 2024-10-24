@@ -30,10 +30,11 @@ class QueryClientTest {
         final Set<DependencyResponse> result = new QueryClient(wmRuntimeInfo.getHttpBaseUrl()).search(List.of("any-query"));
 
         assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(5);
+        assertThat(result).hasSize(6);
         assertThat(result).contains(
-                new DependencyResponse("org.apache.maven:maven-core:3.9.8", "org.apache.maven", "maven-core", "3.9.8", 1718267050000L),
-                new DependencyResponse("org.apache.maven.plugin-tools:maven-plugin-annotations:3.13.1", "org.apache.maven.plugin-tools", "maven-plugin-annotations", "3.13.1", 1716884186000L)
+                new DependencyResponse("org.apache.maven:maven-core:3.9.8", "org.apache.maven", "maven-core", "3.9.8", 1718267050000L, "jar"),
+                new DependencyResponse("org.apache.maven.plugin-tools:maven-plugin-annotations:3.13.1", "org.apache.maven.plugin-tools", "maven-plugin-annotations", "3.13.1", 1716884186000L, "jar"),
+                new DependencyResponse("org.apache.maven.plugins:maven-help-plugin:3.5.1", "org.apache.maven.plugins", "maven-help-plugin", "3.5.1", 1718267050000L, "maven-plugin")
         );
     }
 

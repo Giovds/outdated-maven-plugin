@@ -11,7 +11,7 @@ latest and most secure versions of its dependencies.
 
 You can use the plugin as standalone for a quick check by simply running the following command in your favourite
 project:\
-`mvn com.giovds:outdated-maven-plugin:check -Dyears=<number_of_years>`
+`mvn com.giovds:outdated-maven-plugin:check -Dyears=<number_of_years> -DincludePlugins=<true|false>`
 
 Or you can use the plugin to get the average and total age of all the dependencies in your project:\
 `mvn com.giovds:outdated-maven-plugin:average`
@@ -30,6 +30,8 @@ Alternatively, you can integrate the plugin into your Maven project by adding th
                 <years>1</years>
                 <!-- Whether to fail the build if an outdated dependency is found -->
                 <shouldFailBuild>false</shouldFailBuild>
+                <!-- Whether to include plugins in the check -->
+                <includePlugins>false</includePlugins>
             </configuration>
             <executions>
                 <execution>
