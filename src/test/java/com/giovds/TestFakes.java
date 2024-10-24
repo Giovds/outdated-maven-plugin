@@ -5,6 +5,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
@@ -32,6 +33,18 @@ class TestFakes {
         return dependency;
     }
 
+    public static Artifact createPlugin(String groupId, String artifactId, String version) {
+        return new DefaultArtifact(
+                groupId,
+                artifactId,
+                version,
+                "build",
+                "maven-plugin",
+                null,
+                new DefaultArtifactHandler("maven-plugin")
+        );
+    }
+
     public static MavenProject createProjectWithDependencies(String groupId, String artifactId, String version, Dependency... dependencies) {
         final MavenProject project = new MavenProject();
         project.setPackaging("jar");
@@ -41,6 +54,16 @@ class TestFakes {
         project.setDependencies(List.of(dependencies));
         // Translate dependencies into (resolved) artifacts
         project.setArtifacts(dependenciesToArtifacts(project.getDependencies()));
+        return project;
+    }
+
+    public static MavenProject createProjectWithPlugins(String groupId, String artifactId, String version, Artifact... plugins) {
+        final MavenProject project = new MavenProject();
+        project.setPackaging("jar");
+        project.setGroupId(groupId);
+        project.setArtifactId(artifactId);
+        project.setVersion(version);
+        project.setPluginArtifacts(Set.of(plugins));
         return project;
     }
 
@@ -64,11 +87,21 @@ class TestFakes {
 
     public static void mockClientResponseForDependency(QueryClient client, Dependency dependency, LocalDate date) throws MojoExecutionException {
         var epochMilliseconds = date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000;
-        var response = new DependencyResponse(createDependencyKey(dependency), dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), epochMilliseconds);
+        var response = new DependencyResponse(createDependencyKey(dependency), dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), epochMilliseconds, "jar");
+        when(client.search(any())).thenReturn(Set.of(response));
+    }
+
+    public static void mockClientResponseForPlugin(QueryClient client, Artifact plugin, LocalDate date) throws MojoExecutionException {
+        var epochMilliseconds = date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000;
+        var response = new DependencyResponse(createPluginKey(plugin), plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion(), epochMilliseconds, "maven-plugin");
         when(client.search(any())).thenReturn(Set.of(response));
     }
 
     private static String createDependencyKey(final Dependency dependency) {
         return String.format("%s:%s:%s", dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion());
+    }
+
+    private static String createPluginKey(final Artifact plugin) {
+        return String.format("%s:%s:%s", plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion());
     }
 }

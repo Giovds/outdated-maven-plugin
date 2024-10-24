@@ -13,8 +13,9 @@ import java.util.Map;
  * @param a         artifactId
  * @param v         version
  * @param timestamp The date this GAV id was released to Maven Central
+ * @param p         packaging type
  */
-public record DependencyResponse(String id, String g, String a, String v, long timestamp) {
+public record DependencyResponse(String id, String g, String a, String v, long timestamp, String p) {
 
     /**
      * Map the response from Maven Central to a {@link DependencyResponse}
@@ -28,7 +29,8 @@ public record DependencyResponse(String id, String g, String a, String v, long t
                 (String) doc.get("g"),
                 (String) doc.get("a"),
                 (String) doc.get("v"),
-                (long) doc.get("timestamp")
+                (long) doc.get("timestamp"),
+                (String) doc.get("p")
         );
     }
 
@@ -39,5 +41,14 @@ public record DependencyResponse(String id, String g, String a, String v, long t
      */
     public LocalDate getDateTime() {
         return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * Check if the dependency is a plugin
+     *
+     * @return true if the packaging type is "maven-plugin"
+     */
+    public boolean isPlugin() {
+        return "maven-plugin".equals(p);
     }
 }

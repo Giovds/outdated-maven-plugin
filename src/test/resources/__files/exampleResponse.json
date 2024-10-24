@@ -3,8 +3,8 @@
     "status": 0,
     "QTime": 132,
     "params": {
-      "q": "(g:org.apache.maven AND a:maven-core AND v:3.9.8) OR (g:org.apache.maven AND a:maven-plugin-api AND v:3.9.8) OR (g:com.fasterxml.jackson.jr AND a:jackson-jr-objects AND v:2.17.0) OR (g:org.apache.commons AND a:commons-collections4 AND v:4.4) OR (g:org.apache.maven.plugin-tools AND a:maven-plugin-annotations AND v:3.13.1)",
-      "core": "yoyo",
+      "q": "(g:org.apache.maven AND a:maven-core AND v:3.9.8) OR (g:org.apache.maven AND a:maven-plugin-api AND v:3.9.8) OR (g:com.fasterxml.jackson.jr AND a:jackson-jr-objects AND v:2.17.0) OR (g:org.apache.commons AND a:commons-collections4 AND v:4.4) OR (g:org.apache.maven.plugin-tools AND a:maven-plugin-annotations AND v:3.13.1) OR (g:org.apache.maven.plugins AND a:maven-help-plugin AND v:3.5.1)",
+      "core": "",
       "indent": "off",
       "fl": "id,g,a,v,p,ec,timestamp,tags",
       "start": "",
@@ -15,7 +15,7 @@
     }
   },
   "response": {
-    "numFound": 5,
+    "numFound": 6,
     "start": 0,
     "docs": [
       {
@@ -142,6 +142,25 @@
           "augment",
           "framework",
           "collections"
+        ]
+      },
+      {
+        "id": "org.apache.maven.plugins:maven-help-plugin:3.5.1",
+        "g": "org.apache.maven.plugins",
+        "a": "maven-help-plugin",
+        "v": "3.5.1",
+        "p": "maven-plugin",
+        "timestamp": 1718267050000,
+        "ec": [
+          "-sources.jar",
+          "-javadoc.jar",
+          ".pom",
+          ".jar"
+        ],
+        "tags": [
+          "maven",
+          "plugin",
+          "help"
         ]
       }
     ]
