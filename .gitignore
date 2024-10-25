@@ -1,4 +1,5 @@
 .idea/
 target/
+**/.attach_pid*
 
 .DS_STORE
