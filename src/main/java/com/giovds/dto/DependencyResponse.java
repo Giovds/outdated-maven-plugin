@@ -1,5 +1,8 @@
 package com.giovds.dto;
 
+import com.fasterxml.jackson.jr.ob.JSON;
+
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -23,6 +26,20 @@ public record DependencyResponse(String id, String g, String a, String v, long t
      * @return A {@link DependencyResponse} object
      */
     public static DependencyResponse mapResponseToDependency(final Map<String, Object> doc) {
+
+
+//        try {
+//            System.out.println("String JSON   "+JSON.std.asString(doc));
+//            DependencyResponse response = JSON.std.beanFrom(DependencyResponse.class, JSON.std.asString(doc));
+//            System.out.println("Map output  " + response);
+//            return response;
+//        } catch (IOException e) {
+//            String errorMessage = "Error mapping response: " + e.getMessage();
+//            System.err.println(errorMessage);
+//            throw new RuntimeException(errorMessage);
+//        }
+
+
         return new DependencyResponse(
                 (String) doc.get("id"),
                 (String) doc.get("g"),
