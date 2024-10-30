@@ -88,7 +88,7 @@ public class AverageAgeMojo extends AbstractMojo {
     }
 
     private long calculateDependencyAge(DependencyResponse dependency) {
-        var between = Period.between(dependency.getDateTime(), today);
+        var between = Period.between(DependencyResponse.getDateTime(dependency.timestamp()), today);
         return 365L * between.getYears() + (between.getMonths() * 365L / 12L) + between.getDays();
     }
 

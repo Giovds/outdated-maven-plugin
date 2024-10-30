@@ -27,34 +27,24 @@ public record DependencyResponse(String id, String g, String a, String v, long t
      */
     public static DependencyResponse mapResponseToDependency(final Map<String, Object> doc) {
 
+        try {
+            DependencyResponse response = JSON.std.beanFrom(DependencyResponse.class, JSON.std.asString(doc));
+            return response;
+        } catch (IOException e) {
+            String errorMessage = "Error mapping response: " + e.getMessage();
+            System.err.println(errorMessage);
+            throw new RuntimeException(errorMessage);
+        }
 
-//        try {
-//            System.out.println("String JSON   "+JSON.std.asString(doc));
-//            DependencyResponse response = JSON.std.beanFrom(DependencyResponse.class, JSON.std.asString(doc));
-//            System.out.println("Map output  " + response);
-//            return response;
-//        } catch (IOException e) {
-//            String errorMessage = "Error mapping response: " + e.getMessage();
-//            System.err.println(errorMessage);
-//            throw new RuntimeException(errorMessage);
-//        }
-
-
-        return new DependencyResponse(
-                (String) doc.get("id"),
-                (String) doc.get("g"),
-                (String) doc.get("a"),
-                (String) doc.get("v"),
-                (long) doc.get("timestamp")
-        );
     }
 
     /**
      * Return the timestamp as {@link LocalDate}
      *
+     * @param timestamp the timestamp to convert
      * @return the {@link LocalDate}
      */
-    public LocalDate getDateTime() {
+    public static LocalDate getDateTime(long timestamp) {
         return Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }

@@ -68,7 +68,7 @@ public class CheckMojo extends AbstractMojo {
         for (final Dependency currentDependency : project.getDependencies()) {
             result.stream()
                     .filter(dep -> currentDependency.getGroupId().equals(dep.g()) && currentDependency.getArtifactId().equals(dep.a()))
-                    .filter(dep -> dep.getDateTime().isBefore(LocalDate.now().minusYears(years)))
+                    .filter(dep -> DependencyResponse.getDateTime(dep.timestamp()).isBefore(LocalDate.now().minusYears(years)))
                     .findAny()
                     .ifPresent(outdatedDependencies::add);
         }
@@ -85,7 +85,7 @@ public class CheckMojo extends AbstractMojo {
     private void logWarning(final DependencyResponse dep) {
         final String message =
                 String.format("Dependency '%s' has not received an update since version '%s' was last uploaded '%s'.",
-                        dep.id(), dep.v(), dep.getDateTime());
+                        dep.id(), dep.v(), DependencyResponse.getDateTime(dep.timestamp()));
         if (shouldFailBuild) {
             getLog().error(message);
         } else {
