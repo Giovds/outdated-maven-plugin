@@ -2,6 +2,7 @@ package com.giovds;
 
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.giovds.dto.DependencyResponse;
+import com.giovds.dto.MavenCentralResponse;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.IOException;
@@ -11,12 +12,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Search Maven Central with a Lucene query
@@ -80,17 +78,10 @@ public class QueryClient {
             return HttpResponse.BodySubscribers.mapping(stream, this::toSearchResponse);
         }
 
-        /**
-         * Jackson-jr supports record deserialization in version <a href="https://github.com/FasterXML/jackson-jr/issues/162">2.18</a>
-         * However this contains a bug regarding the order of the constructor params described in <a href="https://github.com/FasterXML/jackson-jr/issues/167">this issue</a>.
-         * Therefore, manual mapping is required.
-         */
         Set<DependencyResponse> toSearchResponse(final InputStream inputStream) {
             try (final InputStream input = inputStream) {
-                final Map<String, Object> httpResponse = JSON.std.mapFrom(input);
-                Map<String, Object> response = (Map<String, Object>) httpResponse.get("response");
-                Collection<Map<String, Object>> dependencies = (Collection<Map<String, Object>>) response.get("docs");
-                return dependencies.stream().map(DependencyResponse::mapResponseToDependency).collect(Collectors.toSet());
+                final MavenCentralResponse mavenCentralResponse = JSON.std.beanFrom(MavenCentralResponse.class, input);
+                return new HashSet<>(mavenCentralResponse.response().docs());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

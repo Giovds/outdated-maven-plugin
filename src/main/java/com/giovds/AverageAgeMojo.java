@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.giovds.dto.DependencyResponse.getDateTime;
+
 /**
  * This plugin goal prints the total and average age of all project dependencies. It excludes dependencies with the
  * same <pre>groupId</pre> (assuming they are part of the same project, they would skew the outcome).
@@ -88,7 +90,7 @@ public class AverageAgeMojo extends AbstractMojo {
     }
 
     private long calculateDependencyAge(DependencyResponse dependency) {
-        var between = Period.between(DependencyResponse.getDateTime(dependency.timestamp()), today);
+        var between = Period.between(getDateTime(dependency.timestamp()), today);
         return 365L * between.getYears() + (between.getMonths() * 365L / 12L) + between.getDays();
     }
 
