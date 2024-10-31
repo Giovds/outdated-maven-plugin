@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import static com.giovds.dto.DependencyResponse.getDateTime;
+
 /**
  * This plugin goal determines if the project dependencies are no longer actively maintained
  * based on a user-defined threshold of inactivity in years.
@@ -68,7 +70,7 @@ public class CheckMojo extends AbstractMojo {
         for (final Dependency currentDependency : project.getDependencies()) {
             result.stream()
                     .filter(dep -> currentDependency.getGroupId().equals(dep.g()) && currentDependency.getArtifactId().equals(dep.a()))
-                    .filter(dep -> dep.getDateTime().isBefore(LocalDate.now().minusYears(years)))
+                    .filter(dep -> getDateTime(dep.timestamp()).isBefore(LocalDate.now().minusYears(years)))
                     .findAny()
                     .ifPresent(outdatedDependencies::add);
         }
@@ -85,7 +87,7 @@ public class CheckMojo extends AbstractMojo {
     private void logWarning(final DependencyResponse dep) {
         final String message =
                 String.format("Dependency '%s' has not received an update since version '%s' was last uploaded '%s'.",
-                        dep.id(), dep.v(), dep.getDateTime());
+                        dep.id(), dep.v(), getDateTime(dep.timestamp()));
         if (shouldFailBuild) {
             getLog().error(message);
         } else {
