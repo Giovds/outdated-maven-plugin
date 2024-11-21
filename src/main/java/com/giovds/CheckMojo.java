@@ -103,7 +103,7 @@ public class CheckMojo extends AbstractMojo {
         }
     }
 
-    private Set<Dependency> mapArtifactsToDependencies(final Set<Artifact> artifacts) {
+    private static Set<Dependency> mapArtifactsToDependencies(final Set<Artifact> artifacts) {
         final Set<Dependency> dependencies = new HashSet<>();
         for (Artifact artifact : artifacts) {
             dependencies.add(mapArtifactToDependency(artifact));
@@ -111,7 +111,7 @@ public class CheckMojo extends AbstractMojo {
         return dependencies;
     }
 
-    private Dependency mapArtifactToDependency(final Artifact artifact) {
+    private static Dependency mapArtifactToDependency(final Artifact artifact) {
         final Dependency dependency = new Dependency();
         dependency.setGroupId(artifact.getGroupId());
         dependency.setArtifactId(artifact.getArtifactId());
