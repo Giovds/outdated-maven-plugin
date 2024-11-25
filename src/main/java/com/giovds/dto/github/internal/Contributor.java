@@ -1,33 +1,6 @@
 package com.giovds.dto.github.internal;
 
-public class Contributor {
-    private String username;
-    private int commitsCount;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public int getCommitsCount() {
-        return commitsCount;
-    }
-
-    public void setCommitsCount(int commitsCount) {
-        this.commitsCount = commitsCount;
-    }
-
-    @Override
-    public String toString() {
-        return "Contributor{" +
-                "username='" + username + '\'' +
-                ", commitsCount=" + commitsCount +
-                '}';
-    }
-
+public record Contributor(String username, int commitsCount) {
     public static ContributorBuilder builder() {
         return new ContributorBuilder();
     }
@@ -50,18 +23,7 @@ public class Contributor {
         }
 
         public Contributor build() {
-            Contributor contributor = new Contributor();
-            contributor.setUsername(this.username);
-            contributor.setCommitsCount(this.commitsCount);
-            return contributor;
-        }
-
-        @Override
-        public String toString() {
-            return "Contributor.ContributorBuilder{" +
-                    "username='" + username + '\'' +
-                    ", commitsCount=" + commitsCount +
-                    '}';
+            return new Contributor(username, commitsCount);
         }
     }
 }

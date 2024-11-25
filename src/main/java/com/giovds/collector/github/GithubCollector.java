@@ -56,14 +56,14 @@ public class GithubCollector implements GithubCollectorInterface {
         var summary = extractCommits(commitActivity);
 
         return Collected.builder()
-                .homepage(repository.getHomepage())
-                .starsCount(repository.getStargazersCount())
-                .forksCount(repository.getForksCount())
-                .subscribersCount(repository.getSubscribersCount())
+                .homepage(repository.homepage())
+                .starsCount(repository.stargazersCount())
+                .forksCount(repository.forksCount())
+                .subscribersCount(repository.subscribersCount())
                 .contributors(Arrays.stream(contributors).map(
                         contributor -> Contributor.builder()
-                                .username(contributor.getAuthor().getLogin())
-                                .commitsCount(contributor.getTotal())
+                                .username(contributor.author().login())
+                                .commitsCount(contributor.total())
                                 .build()
                 ).toList().reversed())
                 .commits(summary)
@@ -75,11 +75,11 @@ public class GithubCollector implements GithubCollectorInterface {
     }
 
     private CompletableFuture<ContributorStat[]> getContributors(Repository repository) throws InterruptedException {
-        return requestAsync("%s/stats/contributors".formatted(repository.getUrl()), ContributorStat[].class, true);
+        return requestAsync("%s/stats/contributors".formatted(repository.url()), ContributorStat[].class, true);
     }
 
     private CompletableFuture<CommitActivity[]> getCommitActivity(Repository repository) throws InterruptedException {
-        return requestAsync("%s/stats/commit_activity".formatted(repository.getUrl()), CommitActivity[].class, true);
+        return requestAsync("%s/stats/commit_activity".formatted(repository.url()), CommitActivity[].class, true);
     }
 
     private <R> CompletableFuture<R> requestAsync(String path, Class<R> responseType) throws InterruptedException {
@@ -134,8 +134,8 @@ public class GithubCollector implements GithubCollectorInterface {
     private static List<RangeSummary> extractCommits(CommitActivity[] commitActivity) {
         List<Point> points = Arrays.stream(commitActivity)
                 .map(entry -> Point.builder()
-                        .date(Instant.ofEpochSecond(entry.getWeek()).atZone(ZoneOffset.UTC).toOffsetDateTime())
-                        .total(entry.getTotal())
+                        .date(Instant.ofEpochSecond(entry.week()).atZone(ZoneOffset.UTC).toOffsetDateTime())
+                        .total(entry.total())
                         .build())
                 .toList();
 
@@ -143,13 +143,13 @@ public class GithubCollector implements GithubCollectorInterface {
 
         return ranges.stream()
                 .map(range -> {
-                    int count = range.getPoints().stream()
-                            .mapToInt(Point::getTotal)
+                    int count = range.points().stream()
+                            .mapToInt(Point::total)
                             .sum();
 
                     return RangeSummary.builder()
-                            .start(range.getStart())
-                            .end(range.getEnd())
+                            .start(range.start())
+                            .end(range.end())
                             .count(count)
                             .build();
                 })
@@ -159,12 +159,12 @@ public class GithubCollector implements GithubCollectorInterface {
     private static List<Range> pointsToRanges(List<Point> points, List<Bucket> buckets) {
         return buckets.stream().map(bucket -> {
             List<Point> filteredPoints = points.stream()
-                    .filter(point -> !point.getDate().isBefore(bucket.getStart()) && point.getDate().isBefore(bucket.getEnd()))
+                    .filter(point -> !point.date().isBefore(bucket.start()) && point.date().isBefore(bucket.end()))
                     .collect(Collectors.toList());
 
             return Range.builder()
-                    .start(bucket.getStart())
-                    .end(bucket.getEnd())
+                    .start(bucket.start())
+                    .end(bucket.end())
                     .points(filteredPoints)
                     .build();
         }).collect(Collectors.toList());

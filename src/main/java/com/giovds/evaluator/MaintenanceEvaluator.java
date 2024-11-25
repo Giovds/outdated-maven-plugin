@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MaintenanceEvaluator {
     public double evaluateCommitsFrequency(Collected collected) {
-        var commits = collected.getCommits();
+        var commits = collected.commits();
         if (commits.isEmpty()) {
             return 0;
         }
@@ -18,9 +18,9 @@ public class MaintenanceEvaluator {
         var range180 = findRange(commits, 180);
         var range365 = findRange(commits, 365);
 
-        var mean30 = range30.getCount();
-        var mean180 = range180.getCount() / (180.0d / 30.0d);
-        var mean365 = range365.getCount() / (365.0d / 30.0d);
+        var mean30 = range30.count();
+        var mean180 = range180.count() / (180.0d / 30.0d);
+        var mean365 = range365.count() / (365.0d / 30.0d);
 
         var monthlyMean = (mean30 * 0.35d) +
                 (mean180 * 0.45d) +
@@ -38,7 +38,7 @@ public class MaintenanceEvaluator {
 
     private RangeSummary findRange(List<RangeSummary> commits, int days) {
         return commits.stream()
-                .filter(range -> Duration.between(range.getStart(), range.getEnd()).toDays() == days)
+                .filter(range -> Duration.between(range.start(), range.end()).toDays() == days)
                 .limit(1)
                 .toList()
                 .getFirst();
