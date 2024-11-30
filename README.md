@@ -24,7 +24,7 @@ Alternatively, you can integrate the plugin into your Maven project by adding th
         <plugin>
             <groupId>com.giovds</groupId>
             <artifactId>outdated-maven-plugin</artifactId>
-            <version>1.3.0</version>
+            <version>1.4.0</version>
             <configuration>
                 <!-- The maximum amount of inactive years allowed -->
                 <years>1</years>
