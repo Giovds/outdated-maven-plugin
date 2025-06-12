@@ -53,7 +53,7 @@
         <mockito-junit-jupiter.version>5.18.0</mockito-junit-jupiter.version>
         <wiremock-standalone.version>3.13.1</wiremock-standalone.version>
 
-        <maven-dependencies.version>3.9.9</maven-dependencies.version>
+        <maven-dependencies.version>3.9.10</maven-dependencies.version>
         <maven-plugin-tools.version>3.15.1</maven-plugin-tools.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
