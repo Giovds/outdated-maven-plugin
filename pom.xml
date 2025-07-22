@@ -48,7 +48,7 @@
         <maven.compiler.release>17</maven.compiler.release>
 
         <jackson-jr-objects.version>2.19.2</jackson-jr-objects.version>
-        <junit-jupiter.version>5.13.3</junit-jupiter.version>
+        <junit-jupiter.version>5.13.4</junit-jupiter.version>
         <assertj-core.version>3.27.3</assertj-core.version>
         <mockito-junit-jupiter.version>5.18.0</mockito-junit-jupiter.version>
         <wiremock-standalone.version>3.13.1</wiremock-standalone.version>
