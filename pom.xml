@@ -47,7 +47,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
 
-        <jackson-jr-objects.version>2.19.2</jackson-jr-objects.version>
+        <jackson-jr-objects.version>2.20.0</jackson-jr-objects.version>
         <junit-jupiter.version>5.13.4</junit-jupiter.version>
         <assertj-core.version>3.27.4</assertj-core.version>
         <mockito-junit-jupiter.version>5.19.0</mockito-junit-jupiter.version>
