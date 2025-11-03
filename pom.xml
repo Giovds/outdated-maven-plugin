@@ -65,7 +65,7 @@
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
 
-        <jreleaser-maven-plugin.version>1.20.0</jreleaser-maven-plugin.version>
+        <jreleaser-maven-plugin.version>1.21.0</jreleaser-maven-plugin.version>
         <spotless-maven-plugin.version>3.0.0</spotless-maven-plugin.version>
         <slf4j.version>2.0.17</slf4j.version>
     </properties>
