@@ -47,26 +47,25 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
 
-        <jackson-jr-objects.version>2.20.0</jackson-jr-objects.version>
-        <junit-jupiter.version>5.13.4</junit-jupiter.version>
+        <jackson-jr-objects.version>2.20.1</jackson-jr-objects.version>
+        <junit-jupiter.version>6.0.1</junit-jupiter.version>
         <assertj-core.version>3.27.4</assertj-core.version>
-        <mockito-junit-jupiter.version>5.20.0</mockito-junit-jupiter.version>
-        <wiremock-standalone.version>3.13.1</wiremock-standalone.version>
-
-        <maven-dependencies.version>3.9.11</maven-dependencies.version>
-        <maven-plugin-tools.version>3.15.1</maven-plugin-tools.version>
+        <mockito-junit-jupiter.version>5.21.0</mockito-junit-jupiter.version>
+        <wiremock-standalone.version>3.13.2</wiremock-standalone.version>
+        <maven-dependencies.version>3.9.12</maven-dependencies.version>
+        <maven-plugin-tools.version>3.15.2</maven-plugin-tools.version>
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
         <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <maven-resources-plugin.version>3.4.0</maven-resources-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
 
-        <jreleaser-maven-plugin.version>1.20.0</jreleaser-maven-plugin.version>
-        <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
+        <jreleaser-maven-plugin.version>1.21.0</jreleaser-maven-plugin.version>
+        <spotless-maven-plugin.version>3.0.0</spotless-maven-plugin.version>
         <slf4j.version>2.0.17</slf4j.version>
     </properties>
 
