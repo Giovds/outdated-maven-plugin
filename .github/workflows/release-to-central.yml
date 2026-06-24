@@ -1,6 +1,16 @@
 name: Publish artifact
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 1.5.0). Must be greater than or equal to the current version in the pom.xml.'
+        required: true
+      dry_run:
+        description: 'Dry run: validate, build and sign without publishing to Maven Central or pushing any commits/tags.'
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -25,6 +35,27 @@ jobs:
           server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
+      - name: Validate release version
+        run: |
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/-SNAPSHOT//')
+          INPUT_VERSION="${{ inputs.version }}"
+          LOWER=$(printf '%s\n%s\n' "$INPUT_VERSION" "$CURRENT_VERSION" | sort -V | head -1)
+          if [ "$LOWER" = "$INPUT_VERSION" ] && [ "$INPUT_VERSION" != "$CURRENT_VERSION" ]; then
+            echo "::error::Release version $INPUT_VERSION is lower than the current pom version $CURRENT_VERSION. Refusing to release."
+            exit 1
+          fi
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Set release version
+        run: mvn -B versions:set -DnewVersion=${{ inputs.version }} -DgenerateBackupPoms=false
+      - name: Commit and tag release version
+        if: ${{ inputs.dry_run == false }}
+        run: |
+          git add pom.xml
+          git commit -m "Release version ${{ inputs.version }}"
+          git tag -a "v${{ inputs.version }}" -m "Release v${{ inputs.version }}"
       - name: Package and verify
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
@@ -43,5 +74,17 @@ jobs:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JRELEASER_MAVENCENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           JRELEASER_MAVENCENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        run: mvn -Prelease jreleaser:full-release ${{ inputs.dry_run == true && '--dry-run' || '' }}
+      - name: Set next SNAPSHOT version
+        if: ${{ inputs.dry_run == false }}
         run: |
-          mvn -Prelease jreleaser:full-release
+          MAJOR=$(echo "${{ inputs.version }}" | cut -d. -f1)
+          MINOR=$(echo "${{ inputs.version }}" | cut -d. -f2)
+          PATCH=$(echo "${{ inputs.version }}" | cut -d. -f3)
+          NEXT_VERSION="${MAJOR}.${MINOR}.$((PATCH+1))-SNAPSHOT"
+          mvn -B versions:set -DnewVersion=${NEXT_VERSION} -DgenerateBackupPoms=false
+          git add pom.xml
+          git commit -m "Prepare next development iteration ${NEXT_VERSION}"
+      - name: Push release commit, tag, and next SNAPSHOT commit
+        if: ${{ inputs.dry_run == false }}
+        run: git push origin main --follow-tags
